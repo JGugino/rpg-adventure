@@ -8,11 +8,13 @@ public class CameraFollow : MonoBehaviour {
 
     public Transform target;
 
-    public float smoothSpeed = 0.8f, rotateSpeed = 20f, pitch = 2f;
+    public float pitch = 2f;
 
     public Vector3 cameraOffset;
 
     private Transform cameraTransform;
+
+    public float currentZoom = 3f;
 
     private void Awake()
     {
@@ -25,12 +27,9 @@ public class CameraFollow : MonoBehaviour {
     }
 
     private void LateUpdate () {
-        cameraTransform.position = Vector3.Lerp(cameraTransform.position, target.position + cameraOffset, smoothSpeed);
 
-        float direction = Input.GetAxis("Horizontal");
+        cameraTransform.position = target.position - cameraOffset * currentZoom;
 
-        cameraTransform.RotateAround(target.position, Vector3.up * direction, rotateSpeed * Time.deltaTime);
-
-       // cameraTransform.LookAt(target.position + Vector3.up * pitch);
+        cameraTransform.LookAt(target.position + Vector3.up * pitch);
     }
 }
