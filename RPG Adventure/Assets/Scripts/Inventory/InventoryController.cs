@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class InventoryController : MonoBehaviour {
 
@@ -28,6 +30,16 @@ public class InventoryController : MonoBehaviour {
 
     public List<InventoryItem> inventoryItems;
 
+    private Item equippedHead, equippedChest, equippedLegs, equippedWeapon;
+
+    public GameObject weaponSlots, defenseSlots, keySlots;
+
+    public GameObject weaponSlotPrefab, defenseSlotPrefab, keySlotPrefab;
+
+    public Image headSlot, chestSlot, legsSlot, weaponSlot;
+
+    public Transform weaponParent, defenseParent, keyParent;
+
     private void Awake()
     {
         instance = this;
@@ -47,6 +59,7 @@ public class InventoryController : MonoBehaviour {
             if (!inventoryItems.Contains(itemToAdd))
             {
                 inventoryItems.Add(itemToAdd);
+                //createPrefab(_item);
                 return;
             }
             else if(inventoryItems.Contains(itemToAdd))
@@ -59,5 +72,48 @@ public class InventoryController : MonoBehaviour {
             inventoryItems.Add(itemToAdd);
             return;
         }
+    }
+
+    public void createPrefab()
+    {
+        foreach(InventoryItem _item in inventoryItems)
+        {
+            ItemType type = _item.type;
+
+            if ((type == ItemType.Weapon))
+            {
+                GameObject _created = Instantiate(weaponSlotPrefab, weaponParent);
+
+                TextMeshProUGUI[] texts = _created.GetComponentsInChildren<TextMeshProUGUI>();
+
+               // Weapon w = _item;
+
+                foreach (TextMeshProUGUI t in texts)
+                {
+                    string objectName = t.name;
+
+                    if (objectName == "Weapon Name Text")
+                    {
+                       // t.text = _item.itemName;
+                    }
+
+                    if (objectName == "Weapon Attack Text")
+                    {
+                        t.text = "Attack: " + w.damage;
+                    }
+                }
+            }
+
+            if ((type == ItemType.Head) || (type == ItemType.Legs) || (type == ItemType.Legs) || (type == ItemType.Heal))
+            {
+                GameObject _created = Instantiate(defenseSlotPrefab, defenseParent);
+            }
+
+            if ((type == ItemType.KeyItem))
+            {
+                GameObject _created = Instantiate(keySlotPrefab, keyParent);
+            }
+        }
+
     }
 }

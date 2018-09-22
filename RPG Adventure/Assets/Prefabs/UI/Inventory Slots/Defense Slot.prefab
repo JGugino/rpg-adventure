@@ -37,7 +37,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224618001486791880}
   m_Layer: 5
-  m_Name: Heal Slot
+  m_Name: Defense Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -760,7 +760,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &236406419
 RectTransform:
   m_ObjectHideFlags: 0
@@ -854,13 +854,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 315849876}
+  - component: {fileID: 315849877}
   m_Layer: 5
   m_Name: Player Inventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &315849876
 RectTransform:
   m_ObjectHideFlags: 0
@@ -880,6 +881,34 @@ RectTransform:
   m_AnchoredPosition: {x: -0.0024948, y: 0.00064039}
   m_SizeDelta: {x: 2154.8, y: 962.3}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &315849877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 315849875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 566b52ed9c8475d4e8889fff7aea1eb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryItems: []
+  weaponSlots: {fileID: 2011245538}
+  defenseSlots: {fileID: 1116126737}
+  keySlots: {fileID: 236406418}
+  weaponSlotPrefab: {fileID: 1070202907688780, guid: 0abee6fac8481aa45886a1a9c0a7fc15,
+    type: 2}
+  defenseSlotPrefab: {fileID: 1524684888746190, guid: 5b4787438d2c68e4c84d5931a8588c54,
+    type: 2}
+  keySlotPrefab: {fileID: 1341725289542524, guid: f7f701a5cd9b8b64c92f071fbbf4718d,
+    type: 2}
+  headSlot: {fileID: 689211752}
+  chestSlot: {fileID: 960555420}
+  legsSlot: {fileID: 360347964}
+  weaponSlot: {fileID: 699538954}
+  weaponParent: {fileID: 844694711}
+  defenseParent: {fileID: 147333895}
+  keyParent: {fileID: 831739599}
 --- !u!1 &340690183
 GameObject:
   m_ObjectHideFlags: 0
@@ -2975,12 +3004,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1116126738}
   m_Layer: 5
-  m_Name: Heal Slots
+  m_Name: Defense Slots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1116126738
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3307,7 +3336,7 @@ GameObject:
   - component: {fileID: 1323647013}
   - component: {fileID: 1323647012}
   m_Layer: 5
-  m_Name: Heal Button
+  m_Name: Defense Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3929,7 +3958,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1732762221}
   - component: {fileID: 1732762223}
-  - component: {fileID: 1732762222}
   - component: {fileID: 1732762224}
   m_Layer: 0
   m_Name: GameManager
@@ -3951,18 +3979,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1732762222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1732762220}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 566b52ed9c8475d4e8889fff7aea1eb8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inventoryItems: []
 --- !u!114 &1732762223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4517,7 +4533,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Heal
+  m_text: Defense
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4585,7 +4601,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 2001415133}
-    characterCount: 4
+    characterCount: 7
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
