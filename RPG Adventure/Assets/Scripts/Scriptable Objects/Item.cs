@@ -5,7 +5,20 @@ public class Item : ScriptableObject {
 
     public string itemName;
 
-    public int value;
+    public int value, range;
 
     public Sprite icon;
+
+    public ItemType type;
+
+    public SpecialAbility specialAbility;
+
+    public bool stackable;
 }
+public enum ItemType{
+    None, Head, Chest, Legs, Weapon, Heal, KeyItem
+};
+public enum SpecialAbility
+{
+    None, ExtraDamage, FireDamage, ShockDamage, forceField
+};

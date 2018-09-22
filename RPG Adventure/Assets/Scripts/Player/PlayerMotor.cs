@@ -5,8 +5,6 @@ using UnityEngine.AI;
 
 public class PlayerMotor : MonoBehaviour {
 
-    public Camera mainCamera;
-
     private NavMeshAgent navAgent { get; set; }
 
     private void Start()
@@ -14,22 +12,8 @@ public class PlayerMotor : MonoBehaviour {
         navAgent = GetComponent<NavMeshAgent>();
     }
 
-    void Update () {
-        playerMove();
-	}
-
-    private void playerMove()
+    public void moveToPoint(Vector3 _position)
     {
-        if (Input.GetButtonDown("Move/Select"))
-        {
-            Ray ray  = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit hitFromRay;
-
-            if(Physics.Raycast(ray, out hitFromRay))
-            {
-                navAgent.SetDestination(hitFromRay.point);
-            }
-        }
+        navAgent.SetDestination(_position);
     }
 }
