@@ -5,7 +5,7 @@ public class Item : ScriptableObject {
 
     public string itemName;
 
-    public int value, range;
+    public int value, range = 10;
 
     public Sprite icon;
 

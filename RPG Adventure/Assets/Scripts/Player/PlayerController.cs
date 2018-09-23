@@ -5,13 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerMotor))]
 public class PlayerController : MonoBehaviour {
 
-    public GameObject playerInventory;
-
     public Camera mainCamera;
 
     private int playerHealth = 50;
 
     private PlayerMotor pMotor;
+
+    private bool isPaused = false;
 
     private void Awake()
     {
@@ -35,19 +35,23 @@ public class PlayerController : MonoBehaviour {
     {
         if (Input.GetButtonDown("Inventory"))
         {
-            if (playerInventory.activeSelf)
+            if (GUIController.instance.inventoryObject.activeSelf)
             {
-                playerInventory.SetActive(false);
-            }else if (!playerInventory.activeSelf)
+                GUIController.instance.toggleInventory(false);
+                isPaused = false;
+            }
+            else if (!GUIController.instance.inventoryObject.activeSelf)
             {
-                playerInventory.SetActive(true);
+                GUIController.instance.toggleInventory(true);
+                InventoryController.instance.createPrefab();
+                isPaused = true;
             }
         }
     }
 
     private void moveSelect()
     {
-        if (Input.GetButtonDown("Move/Select"))
+        if (Input.GetButtonDown("Move/Select") && (!isPaused))
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
@@ -59,14 +63,34 @@ public class PlayerController : MonoBehaviour {
 
                 if (hitFromRay.collider.GetComponent<ItemController>())
                 {
+
+
                     Item item = hitFromRay.collider.GetComponent<ItemController>().item;
 
                     int range = item.range;
 
                     int distance = (int)Vector3.Distance(transform.position, hitFromRay.point);
+
+                    ItemType _type = item.type;
+
                     if (distance <= range)
                     {
-                        InventoryController.instance.addItem(item);
+                        if (_type == ItemType.Weapon)
+                        {
+                            Weapon _weapon = (Weapon)item;
+
+                            InventoryController.instance.addItem(item, _weapon);
+                        }else if ((_type == ItemType.Head) || (_type == ItemType.Chest) || (_type == ItemType.Legs))
+                        {
+                            Armor _armor = (Armor)item;
+
+                            InventoryController.instance.addItem(item, null, _armor);
+                        }
+                        else
+                        {
+                            InventoryController.instance.addItem(item);
+                        }
+
 
                         hitFromRay.collider.gameObject.SetActive(false);
                     }
