@@ -21,6 +21,8 @@ public class GUIController : MonoBehaviour {
     [HideInInspector]
     public Button weaponButton, defenseButton, keyButton;
 
+    public Button weaponEquip, headEquip, chestEquip, legsEquip;
+
     private void Awake()
     {
         instance = this;
@@ -47,6 +49,12 @@ public class GUIController : MonoBehaviour {
         legsSlot = GameObject.Find("Leg Item Icon").GetComponent<Image>();
         weaponSlot = GameObject.Find("Weapon Item Icon").GetComponent<Image>();
 
+        //Finds Equip Buttons
+        headEquip = GameObject.Find("Head Item Icon").GetComponent<Button>();
+        chestEquip = GameObject.Find("Chest Item Icon").GetComponent<Button>();
+        legsEquip = GameObject.Find("Leg Item Icon").GetComponent<Button>();
+        weaponEquip = GameObject.Find("Weapon Item Icon").GetComponent<Button>();
+
         //Finds Slot Selector Buttons
         weaponButton = GameObject.Find("Weapons Button").GetComponent<Button>();
         defenseButton = GameObject.Find("Defense Button").GetComponent<Button>();
@@ -60,6 +68,7 @@ public class GUIController : MonoBehaviour {
         defaultDisable();
     }
 
+    //Toggles inventory open and closed
     public void toggleInventory(bool open)
     {
         if (open)
@@ -71,12 +80,22 @@ public class GUIController : MonoBehaviour {
         }
     }
 
+    //Sets the default view of the inventory
     private void defaultDisable()
     {
 
         openWeaponSlots();
 
         toggleInventory(false);
+    }
+
+    public void setButtonListeners()
+    {
+        headEquip.onClick.AddListener( delegate { InventoryController.instance.unequipItem(ItemType.Head); });
+        chestEquip.onClick.AddListener(delegate { InventoryController.instance.unequipItem(ItemType.Chest); });
+        legsEquip.onClick.AddListener(delegate { InventoryController.instance.unequipItem(ItemType.Legs); });
+
+        weaponEquip.onClick.AddListener(delegate { InventoryController.instance.unequipItem(ItemType.Weapon); });
     }
 
     #region Slot Controls

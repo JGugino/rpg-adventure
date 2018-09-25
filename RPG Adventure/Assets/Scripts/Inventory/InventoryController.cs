@@ -42,7 +42,7 @@ public class InventoryController : MonoBehaviour {
 
     public List<InventoryItem> inventoryItems;
 
-    private Item equippedHead, equippedChest, equippedLegs, equippedWeapon;
+    private InventoryItem equippedHead, equippedChest, equippedLegs, equippedWeapon;
 
     private void Awake()
     {
@@ -52,6 +52,7 @@ public class InventoryController : MonoBehaviour {
     private void Start()
     {
         GUIController.instance.findInventoryUI();
+        GUIController.instance.setButtonListeners();
     }
 
     public void addItem(Item _item, Weapon _weapon = null, Armor _armor = null)
@@ -96,8 +97,6 @@ public class InventoryController : MonoBehaviour {
         {
             ItemType type = _item.type;
 
-            Debug.Log("Current Item: " + _item.name + ", Type: " + _item.type);
-
             if ((type == ItemType.Weapon))
             {
                 GUIController.instance.weaponSlots.SetActive(true);
@@ -111,6 +110,10 @@ public class InventoryController : MonoBehaviour {
                     TextMeshProUGUI[] texts = _created.GetComponentsInChildren<TextMeshProUGUI>();
 
                     Image[] images = _created.GetComponentsInChildren<Image>();
+
+                    Button equipButton = _created.GetComponentInChildren<Button>();
+
+                    equipButton.onClick.AddListener(delegate { equipItem(_item); });
 
                     foreach (Image i in images) {
                         string objectName = i.name;
@@ -151,6 +154,10 @@ public class InventoryController : MonoBehaviour {
                     TextMeshProUGUI[] texts = _created.GetComponentsInChildren<TextMeshProUGUI>();
 
                     Image[] images = _created.GetComponentsInChildren<Image>();
+
+                    Button equipButton = _created.GetComponentInChildren<Button>();
+
+                    equipButton.onClick.AddListener(delegate { equipItem(_item); });
 
                     foreach (Image i in images)
                     {
@@ -198,6 +205,10 @@ public class InventoryController : MonoBehaviour {
 
                     Image[] images = _created.GetComponentsInChildren<Image>();
 
+                    Button equipButton = _created.GetComponentInChildren<Button>();
+
+                    equipButton.onClick.AddListener(delegate { equipItem(_item); });
+
                     foreach (Image i in images)
                     {
                         string objectName = i.name;
@@ -222,5 +233,123 @@ public class InventoryController : MonoBehaviour {
         }
 
         GUIController.instance.openWeaponSlots();
+    }
+
+    public void equipItem(InventoryItem _item)
+    {
+        if (_item.type == ItemType.Weapon)
+        {
+            equippedWeapon = _item;
+            GUIController.instance.weaponSlot.sprite = _item.icon;
+            inventoryItems.Remove(_item);
+
+            GameObject prefabToRemove = GameObject.Find(_item.name);
+
+            if (prefabToRemove != null)
+            {
+                prefabToRemove.SetActive(false);
+            }
+        }
+
+        if ((_item.type == ItemType.Head))
+        {
+            equippedHead = _item;
+            GUIController.instance.headSlot.sprite = _item.icon;
+            inventoryItems.Remove(_item);
+
+            GameObject prefabToRemove = GameObject.Find(_item.name);
+
+            if (prefabToRemove != null)
+            {
+                prefabToRemove.SetActive(false);
+            }
+        }
+
+        if ((_item.type == ItemType.Chest))
+        {
+            equippedChest = _item;
+            GUIController.instance.chestSlot.sprite = _item.icon;
+            inventoryItems.Remove(_item);
+
+            GameObject prefabToRemove = GameObject.Find(_item.name);
+
+            if (prefabToRemove != null)
+            {
+                prefabToRemove.SetActive(false);
+            }
+        }
+
+        if ((_item.type == ItemType.Legs))
+        {
+            equippedLegs = _item;
+            GUIController.instance.legsSlot.sprite = _item.icon;
+            inventoryItems.Remove(_item);
+
+            GameObject prefabToRemove = GameObject.Find(_item.name);
+
+            if (prefabToRemove != null)
+            {
+                prefabToRemove.SetActive(false);
+            }
+        }
+    }
+
+    public void unequipItem(ItemType _type)
+    {
+        if (_type == ItemType.Weapon)
+        {
+            inventoryItems.Add(equippedWeapon);
+            GUIController.instance.weaponSlot.sprite = null;
+            equippedWeapon = null;
+
+            GameObject prefabToAdd = GameObject.Find(equippedWeapon.name);
+
+            if (prefabToAdd != null)
+            {
+                prefabToAdd.SetActive(true);
+            }
+        }
+
+        if ((_type == ItemType.Head))
+        {
+            inventoryItems.Add(equippedHead);
+            GUIController.instance.headSlot.sprite = null;
+            equippedHead = null;
+
+            GameObject prefabToAdd = GameObject.Find(equippedHead.name);
+
+            if (prefabToAdd != null)
+            {
+                prefabToAdd.SetActive(true);
+            }
+        }
+
+        if ((_type == ItemType.Chest))
+        {
+            inventoryItems.Add(equippedChest);
+            GUIController.instance.chestSlot.sprite = null;
+            equippedChest = null;
+
+            GameObject prefabToAdd = GameObject.Find(equippedChest.name);
+
+            if (prefabToAdd != null)
+            {
+                prefabToAdd.SetActive(true);
+            }
+        }
+
+        if ((_type == ItemType.Legs))
+        {
+            inventoryItems.Add(equippedLegs);
+            GUIController.instance.legsSlot.sprite = null;
+            equippedLegs = null;
+
+            GameObject prefabToAdd = GameObject.Find(equippedLegs.name);
+
+            if (prefabToAdd != null)
+            {
+                prefabToAdd.SetActive(true);
+            }
+        }
     }
 }
