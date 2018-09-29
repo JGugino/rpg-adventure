@@ -21,6 +21,7 @@ public class GUIController : MonoBehaviour {
     [HideInInspector]
     public Button weaponButton, defenseButton, keyButton;
 
+    [HideInInspector]
     public Button weaponEquip, headEquip, chestEquip, legsEquip;
 
     private void Awake()

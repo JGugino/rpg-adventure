@@ -14,7 +14,7 @@ MonoBehaviour:
   itemName: Broken Chestplate
   value: 15
   range: 10
-  icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 0fce622d9d79cd148a22ca2b218cc2f7, type: 3}
   type: 2
   specialAbility: 2
   stackable: 0

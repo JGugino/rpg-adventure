@@ -55,6 +55,7 @@ public class InventoryController : MonoBehaviour {
         GUIController.instance.setButtonListeners();
     }
 
+    #region Add item to inventory list
     public void addItem(Item _item, Weapon _weapon = null, Armor _armor = null)
     {
         string itemName = _item.itemName;
@@ -90,7 +91,9 @@ public class InventoryController : MonoBehaviour {
             return;
         }
     }
+    #endregion
 
+    #region Creating Inventory Prefabs
     public void createPrefab()
     {
         foreach (InventoryItem _item in inventoryItems)
@@ -234,66 +237,146 @@ public class InventoryController : MonoBehaviour {
 
         GUIController.instance.openWeaponSlots();
     }
+    #endregion
 
+    #region Equip Items
     public void equipItem(InventoryItem _item)
     {
         if (_item.type == ItemType.Weapon)
         {
-            equippedWeapon = _item;
-            GUIController.instance.weaponSlot.sprite = _item.icon;
-            inventoryItems.Remove(_item);
 
-            GameObject prefabToRemove = GameObject.Find(_item.name);
-
-            if (prefabToRemove != null)
+            if (equippedWeapon != null)
             {
-                prefabToRemove.SetActive(false);
+                unequipItem(_item.type);
+
+                equippedWeapon = _item;
+                GUIController.instance.weaponSlot.sprite = _item.icon;
+                inventoryItems.Remove(_item);
+
+                GameObject prefabToRemove = GameObject.Find(_item.name);
+
+                if (prefabToRemove != null)
+                {
+                    GameObject.Destroy(prefabToRemove);
+                }
             }
+            else
+            {
+                equippedWeapon = _item;
+                GUIController.instance.weaponSlot.sprite = _item.icon;
+                inventoryItems.Remove(_item);
+
+                GameObject prefabToRemove = GameObject.Find(_item.name);
+
+                if (prefabToRemove != null)
+                {
+                    GameObject.Destroy(prefabToRemove);
+                }
+            }
+
         }
 
         if ((_item.type == ItemType.Head))
         {
-            equippedHead = _item;
-            GUIController.instance.headSlot.sprite = _item.icon;
-            inventoryItems.Remove(_item);
-
-            GameObject prefabToRemove = GameObject.Find(_item.name);
-
-            if (prefabToRemove != null)
+            if (equippedHead != null)
             {
-                prefabToRemove.SetActive(false);
+                unequipItem(_item.type);
+
+
+                equippedHead = _item;
+                GUIController.instance.headSlot.sprite = _item.icon;
+                inventoryItems.Remove(_item);
+
+                GameObject prefabToRemove = GameObject.Find(_item.name);
+
+                if (prefabToRemove != null)
+                {
+                    GameObject.Destroy(prefabToRemove);
+                }
             }
+            else
+            {
+                equippedHead = _item;
+                GUIController.instance.headSlot.sprite = _item.icon;
+                inventoryItems.Remove(_item);
+
+                GameObject prefabToRemove = GameObject.Find(_item.name);
+
+                if (prefabToRemove != null)
+                {
+                    GameObject.Destroy(prefabToRemove);
+                }
+            }
+
         }
 
         if ((_item.type == ItemType.Chest))
         {
-            equippedChest = _item;
-            GUIController.instance.chestSlot.sprite = _item.icon;
-            inventoryItems.Remove(_item);
-
-            GameObject prefabToRemove = GameObject.Find(_item.name);
-
-            if (prefabToRemove != null)
+            if (equippedChest != null)
             {
-                prefabToRemove.SetActive(false);
+                unequipItem(_item.type);
+
+                equippedChest = _item;
+                GUIController.instance.chestSlot.sprite = _item.icon;
+                inventoryItems.Remove(_item);
+
+                GameObject prefabToRemove = GameObject.Find(_item.name);
+
+                if (prefabToRemove != null)
+                {
+                    GameObject.Destroy(prefabToRemove);
+                }
+            }
+            else
+            {
+                equippedChest = _item;
+                GUIController.instance.chestSlot.sprite = _item.icon;
+                inventoryItems.Remove(_item);
+
+                GameObject prefabToRemove = GameObject.Find(_item.name);
+
+                if (prefabToRemove != null)
+                {
+                    GameObject.Destroy(prefabToRemove);
+                }
             }
         }
 
         if ((_item.type == ItemType.Legs))
         {
-            equippedLegs = _item;
-            GUIController.instance.legsSlot.sprite = _item.icon;
-            inventoryItems.Remove(_item);
-
-            GameObject prefabToRemove = GameObject.Find(_item.name);
-
-            if (prefabToRemove != null)
+            if (equippedLegs != null)
             {
-                prefabToRemove.SetActive(false);
+                unequipItem(_item.type);
+
+                equippedLegs = _item;
+                GUIController.instance.legsSlot.sprite = _item.icon;
+                inventoryItems.Remove(_item);
+
+                GameObject prefabToRemove = GameObject.Find(_item.name);
+
+                if (prefabToRemove != null)
+                {
+                    GameObject.Destroy(prefabToRemove);
+                }
+            }
+            else
+            {
+                equippedLegs = _item;
+                GUIController.instance.legsSlot.sprite = _item.icon;
+                inventoryItems.Remove(_item);
+
+                GameObject prefabToRemove = GameObject.Find(_item.name);
+
+                if (prefabToRemove != null)
+                {
+                    GameObject.Destroy(prefabToRemove);
+                }
             }
         }
     }
+    #endregion
 
+    #region Unequip Items
     public void unequipItem(ItemType _type)
     {
         if (_type == ItemType.Weapon)
@@ -302,12 +385,7 @@ public class InventoryController : MonoBehaviour {
             GUIController.instance.weaponSlot.sprite = null;
             equippedWeapon = null;
 
-            GameObject prefabToAdd = GameObject.Find(equippedWeapon.name);
-
-            if (prefabToAdd != null)
-            {
-                prefabToAdd.SetActive(true);
-            }
+            createPrefab();
         }
 
         if ((_type == ItemType.Head))
@@ -316,12 +394,7 @@ public class InventoryController : MonoBehaviour {
             GUIController.instance.headSlot.sprite = null;
             equippedHead = null;
 
-            GameObject prefabToAdd = GameObject.Find(equippedHead.name);
-
-            if (prefabToAdd != null)
-            {
-                prefabToAdd.SetActive(true);
-            }
+            createPrefab();
         }
 
         if ((_type == ItemType.Chest))
@@ -330,12 +403,7 @@ public class InventoryController : MonoBehaviour {
             GUIController.instance.chestSlot.sprite = null;
             equippedChest = null;
 
-            GameObject prefabToAdd = GameObject.Find(equippedChest.name);
-
-            if (prefabToAdd != null)
-            {
-                prefabToAdd.SetActive(true);
-            }
+            createPrefab();
         }
 
         if ((_type == ItemType.Legs))
@@ -344,12 +412,8 @@ public class InventoryController : MonoBehaviour {
             GUIController.instance.legsSlot.sprite = null;
             equippedLegs = null;
 
-            GameObject prefabToAdd = GameObject.Find(equippedLegs.name);
-
-            if (prefabToAdd != null)
-            {
-                prefabToAdd.SetActive(true);
-            }
+            createPrefab();
         }
     }
+    #endregion
 }

@@ -8,13 +8,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e582983d26f36aa45b070c0fe2ba6f89, type: 3}
-  m_Name: Master Key
+  m_Script: {fileID: 11500000, guid: c9176619bf5912e4a9737e97944461f4, type: 3}
+  m_Name: Broken Legs
   m_EditorClassIdentifier: 
-  itemName: Master Key
-  value: 100
+  itemName: Broken Legs
+  value: 0
   range: 10
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  type: 6
-  specialAbility: 0
+  icon: {fileID: 21300000, guid: 907f00692cd17c548822577df8c4f953, type: 3}
+  type: 3
+  specialAbility: 4
   stackable: 0
+  defense: 25

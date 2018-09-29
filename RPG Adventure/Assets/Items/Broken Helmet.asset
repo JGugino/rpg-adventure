@@ -14,7 +14,7 @@ MonoBehaviour:
   itemName: Broken Helmet
   value: 0
   range: 10
-  icon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 3a293d89acdb4ad4cbdd8fa7a7de2ba2, type: 3}
   type: 1
   specialAbility: 0
   stackable: 0
