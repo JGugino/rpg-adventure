@@ -15,6 +15,8 @@ MonoBehaviour:
   attackDamage: 15
   defenseAmount: 10
   creatureBond: 100
-  creatureRange: 10
-  creatureSpeed: 10
+  creatureRangeMin: 10
+  creatureRangeMax: 35
+  creatureAttackRange: 10
+  creatureSpeed: 8
   creatureBehavior: 0

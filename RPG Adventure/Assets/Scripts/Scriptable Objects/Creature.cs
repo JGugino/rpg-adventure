@@ -7,9 +7,9 @@ public class Creature : ScriptableObject {
 
     public string creatureName;
 
-    public int attackDamage, defenseAmount;
+    public int attackDamage, defenseAmount, creatureHealth;
 
-    public float creatureBond, creatureRange, creatureSpeed;
+    public float creatureBond, creatureRangeMin, creatureRangeMax, creatureAttackRange, triggerRange, creatureSpeed;
 
     public CreatureBehavior creatureBehavior;
 }

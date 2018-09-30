@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour {
 
     private int playerHealth = 50;
 
+    private int baseDamage = 3;
+
     private PlayerMotor pMotor;
 
     private bool isPaused = false;
@@ -93,6 +95,18 @@ public class PlayerController : MonoBehaviour {
 
 
                         hitFromRay.collider.gameObject.SetActive(false);
+                    }
+                }
+
+                if (hitFromRay.collider.GetComponent<CreatureController>())
+                {
+                    if (InventoryController.instance.getEquippedWeapon() != null)
+                    {
+                        hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, InventoryController.instance.getEquippedWeapon().damage);
+                    }
+                    else
+                    {
+                        hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, baseDamage);
                     }
                 }
             }

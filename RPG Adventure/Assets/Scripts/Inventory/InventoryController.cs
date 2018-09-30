@@ -8,7 +8,7 @@ public class InventoryController : MonoBehaviour {
 
     #region Inventory Item Class
     [System.Serializable]
-    public class InventoryItem{
+    public class InventoryItem {
 
         public string name;
         public Sprite icon;
@@ -35,7 +35,7 @@ public class InventoryController : MonoBehaviour {
             }
         }
 
-   }
+    }
     #endregion
 
     public static InventoryController instance;
@@ -381,39 +381,74 @@ public class InventoryController : MonoBehaviour {
     {
         if (_type == ItemType.Weapon)
         {
-            inventoryItems.Add(equippedWeapon);
-            GUIController.instance.weaponSlot.sprite = null;
-            equippedWeapon = null;
+            if (equippedWeapon != null)
+            {
+                inventoryItems.Add(equippedWeapon);
+                GUIController.instance.weaponSlot.sprite = null;
+                equippedWeapon = null;
 
-            createPrefab();
+                createPrefab();
+            }
         }
 
         if ((_type == ItemType.Head))
         {
-            inventoryItems.Add(equippedHead);
-            GUIController.instance.headSlot.sprite = null;
-            equippedHead = null;
+            if (equippedHead != null)
+            {
+                inventoryItems.Add(equippedHead);
+                GUIController.instance.headSlot.sprite = null;
+                equippedHead = null;
 
-            createPrefab();
+                createPrefab();
+            }
         }
 
         if ((_type == ItemType.Chest))
         {
-            inventoryItems.Add(equippedChest);
-            GUIController.instance.chestSlot.sprite = null;
-            equippedChest = null;
+            if (equippedChest != null)
+            {
+                inventoryItems.Add(equippedChest);
+                GUIController.instance.chestSlot.sprite = null;
+                equippedChest = null;
 
-            createPrefab();
+                createPrefab();
+            }
         }
 
         if ((_type == ItemType.Legs))
         {
-            inventoryItems.Add(equippedLegs);
-            GUIController.instance.legsSlot.sprite = null;
-            equippedLegs = null;
+            if (equippedLegs != null)
+            {
 
-            createPrefab();
+                inventoryItems.Add(equippedLegs);
+                GUIController.instance.legsSlot.sprite = null;
+                equippedLegs = null;
+
+                createPrefab();
+            }
         }
+    }
+    #endregion
+
+    #region Getters
+    public InventoryItem getEquippedWeapon()
+    {
+        return equippedWeapon;
+    }
+
+    public InventoryItem getEquippedHead()
+    {
+        return equippedHead;
+    }
+
+    public InventoryItem getEquippedChest()
+    {
+        return equippedChest;
+    }
+
+    public InventoryItem getEquippedLegs()
+    {
+        return equippedLegs;
     }
     #endregion
 }
