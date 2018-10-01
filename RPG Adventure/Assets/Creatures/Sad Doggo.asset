@@ -14,11 +14,11 @@ MonoBehaviour:
   creatureName: Sad Doggo
   attackDamage: 45
   defenseAmount: 45
-  creatureHealth: 100
+  creatureHealth: 97
   creatureBond: 0
   creatureRangeMin: 35
   creatureRangeMax: 50
   creatureAttackRange: 5
   triggerRange: 40
-  creatureSpeed: 15
+  creatureSpeed: 8
   creatureBehavior: 2

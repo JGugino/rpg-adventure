@@ -18,7 +18,11 @@ public class CreatureController : MonoBehaviour {
     private GameObject playerObject;
 
     [SerializeField, Tooltip("The wait time between moves")]
-    private float waitTime = 5, paincWaitTime = 1, paincSpeed;
+    private float waitTime = 5, paincWaitTime = 1;
+
+    private float paincSpeed;
+
+    private int creatureHealth;
 
     private void Awake()
     {

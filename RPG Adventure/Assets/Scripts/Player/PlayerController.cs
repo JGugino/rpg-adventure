@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour {
 
         toggleInventory();
 
+        toggleMap();
+
         //Player Death
         if (playerHealth <= 0)
         {
@@ -33,17 +35,41 @@ public class PlayerController : MonoBehaviour {
         }
 	}
 
+    private void toggleMap()
+    {
+        if (Input.GetButtonDown("Map"))
+        {
+            if (!GUIController.instance.mapOpen)
+            {
+                GUIController.instance.toggleMap(true);
+                GUIController.instance.toggleMinimap(false);
+                isPaused = true;
+            }else if (GUIController.instance.mapOpen)
+            {
+                GUIController.instance.toggleMap(false);
+                GUIController.instance.toggleMinimap(true);
+                isPaused = false;
+            }
+        }
+    }
+
     private void toggleInventory()
     {
         if (Input.GetButtonDown("Inventory"))
         {
             if (GUIController.instance.inventoryObject.activeSelf)
             {
+                GUIController.instance.toggleMinimap(true);
                 GUIController.instance.toggleInventory(false);
                 isPaused = false;
             }
             else if (!GUIController.instance.inventoryObject.activeSelf)
             {
+                if (GUIController.instance.mapOpen)
+                {
+                    GUIController.instance.toggleMap(false);
+                }
+                GUIController.instance.toggleMinimap(false);
                 GUIController.instance.toggleInventory(true);
                 InventoryController.instance.createPrefab();
                 isPaused = true;

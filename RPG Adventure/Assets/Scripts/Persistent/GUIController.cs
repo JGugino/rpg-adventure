@@ -7,6 +7,9 @@ public class GUIController : MonoBehaviour {
 
     public static GUIController instance;
 
+    public bool minimapOpen = true, mapOpen = false;
+
+    #region Inventory Variables
     public GameObject weaponSlotPrefab, defenseSlotPrefab, keySlotPrefab;
 
     [HideInInspector]
@@ -23,6 +26,13 @@ public class GUIController : MonoBehaviour {
 
     [HideInInspector]
     public Button weaponEquip, headEquip, chestEquip, legsEquip;
+    #endregion
+
+    [HideInInspector]
+    public GameObject mapObject, minimapObject;
+
+    [HideInInspector]
+    public Camera mapCamera, minimapCamera;
 
     private void Awake()
     {
@@ -31,6 +41,8 @@ public class GUIController : MonoBehaviour {
 
     public void findInventoryUI()
     {
+
+        #region Finding Inventory Objects
         //Finds Inventory Object
         inventoryObject = GameObject.Find("Player Inventory");
 
@@ -67,6 +79,46 @@ public class GUIController : MonoBehaviour {
         keyButton.onClick.AddListener(delegate { openKeySlots(); });
 
         defaultDisable();
+        #endregion
+
+        mapObject = GameObject.Find("Map");
+
+        minimapObject = GameObject.Find("Minimap");
+
+        mapCamera = GameObject.Find("Map Camera").GetComponent<Camera>();
+
+        minimapCamera = GameObject.Find("Minimap Camera").GetComponent<Camera>();
+
+        toggleMap(mapOpen);
+    }
+
+    public void toggleMap(bool _open)
+    {
+        if (_open)
+        {
+            mapObject.SetActive(true);
+            mapCamera.gameObject.SetActive(true);
+            mapOpen = true;
+        }else if (!_open)
+        {
+            mapObject.SetActive(false);
+            mapCamera.gameObject.SetActive(false);
+            mapOpen = false;
+        }
+    }
+
+    public void toggleMinimap(bool _open)
+    {
+        if (_open)
+        {
+            minimapObject.SetActive(true);
+            minimapOpen = true;
+        }
+        else if (!_open)
+        {
+            minimapObject.SetActive(false);
+            minimapOpen = false;
+        }
     }
 
     //Toggles inventory open and closed
