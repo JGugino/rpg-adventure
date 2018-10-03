@@ -19,8 +19,6 @@ public class MapController : MonoBehaviour {
                 float size = Mathf.Round(direction * zoomSpeed);
 
                 GUIController.instance.mapCamera.orthographicSize -= size;
-
-                Debug.Log("Size: " + GUIController.instance.mapCamera.orthographicSize);
             }
 
             if (GUIController.instance.mapCamera.orthographicSize < 5)
@@ -43,8 +41,6 @@ public class MapController : MonoBehaviour {
                 float size = Mathf.Round(direction * zoomSpeed);
 
                 GUIController.instance.minimapCamera.orthographicSize -= size;
-
-                Debug.Log("Size: " + GUIController.instance.minimapCamera.orthographicSize);
             }
 
             if (GUIController.instance.minimapCamera.orthographicSize < 5)
@@ -61,6 +57,15 @@ public class MapController : MonoBehaviour {
 
     void LateUpdate () {
 
-        transform.position = Vector3.Lerp(new Vector3(transform.position.x, transform.position.y, transform.position.z), new Vector3(target.position.x, transform.position.y, target.position.z), Time.deltaTime * 3f);
+        GUIController.instance.mapCamera.transform.position = Vector3.Lerp(new Vector3(transform.position.x, transform.position.y, transform.position.z), new Vector3(target.position.x, transform.position.y, target.position.z), Time.deltaTime * 3f);
+
+        if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+        {
+            GUIController.instance.minimapCamera.transform.position = Vector3.Lerp(new Vector3(transform.position.x, transform.position.y, transform.position.z), new Vector3(target.position.x, transform.position.y, target.position.z), Time.deltaTime * 3f);
+        }
+        else if (PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+        {
+            GUIController.instance.minimapCamera.transform.position = Vector3.Lerp(new Vector3(transform.position.x, transform.position.y, transform.position.z), new Vector3(InventoryController.instance.equippedCreature.transform.position.x, transform.position.y, InventoryController.instance.equippedCreature.transform.position.z), Time.deltaTime * 3f);
+        }
 	}
 }

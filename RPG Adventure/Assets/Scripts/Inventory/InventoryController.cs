@@ -44,6 +44,9 @@ public class InventoryController : MonoBehaviour {
 
     private InventoryItem equippedHead, equippedChest, equippedLegs, equippedWeapon;
 
+    [SerializeField]
+    public GameObject equippedCreature;
+
     private void Awake()
     {
         instance = this;
@@ -449,6 +452,11 @@ public class InventoryController : MonoBehaviour {
     public InventoryItem getEquippedLegs()
     {
         return equippedLegs;
+    }
+
+    public GameObject getEquippedCreature()
+    {
+        return equippedCreature;
     }
     #endregion
 }

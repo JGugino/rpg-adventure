@@ -50,13 +50,29 @@ public class CameraOrbit : MonoBehaviour {
         #region Horizontal Camera Controls
         float _direction = Input.GetAxis("Horizontal");
 
-        if (_direction < 0)
+        if (_direction > 0)
         {
-            transform.RotateAround(cameraFollow.target.position, Vector3.up, horRotateSpeed * Time.deltaTime);
+            if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+            {
+                transform.RotateAround(cameraFollow.target.position, Vector3.up, horRotateSpeed * Time.deltaTime);
+            }
+            else if (PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+            {
+
+                transform.RotateAround(InventoryController.instance.equippedCreature.transform.position, Vector3.up, horRotateSpeed * Time.deltaTime);
+            }
+
         }
-        else if (_direction > 0)
+        else if (_direction < 0)
         {
-            transform.RotateAround(cameraFollow.target.position, Vector3.up, -horRotateSpeed * Time.deltaTime);
+            if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+            {
+                transform.RotateAround(cameraFollow.target.position, Vector3.up, -horRotateSpeed * Time.deltaTime);
+            }
+            else if (PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+            {
+                transform.RotateAround(InventoryController.instance.equippedCreature.transform.position, Vector3.up, -horRotateSpeed * Time.deltaTime); 
+            }
         }
         #endregion
     }

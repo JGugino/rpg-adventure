@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour {
 
     public Camera mainCamera;
 
-    private int playerHealth = 50;
+    private int playerHealth = 100, playerMaxHealth = 100;
 
     private int baseDamage = 3;
 
@@ -15,18 +15,55 @@ public class PlayerController : MonoBehaviour {
 
     private bool isPaused = false;
 
+    private bool controllingCreature = false;
+
+    private Vector3 startPoint;
+
     private void Awake()
     {
         pMotor = GetComponent<PlayerMotor>();
+
+        startPoint = transform.position;
+
+        playerHealth = playerMaxHealth;
     }
 
     void Update () {
 
-        moveSelect();
+        if (!controllingCreature)
+        {
+            moveSelect();
+        }
+        else if (controllingCreature)
+        {
+            moveCreature();
+        }
 
         toggleInventory();
 
         toggleMap();
+
+        if (Input.GetButtonDown("Use"))
+        {
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+            RaycastHit hitPoint;
+
+            if (Physics.Raycast(ray, out hitPoint))
+            {
+                if (hitPoint.collider.GetComponent<CreatureController>())
+                {
+                    InventoryController.instance.equippedCreature = hitPoint.collider.gameObject;
+                    controllingCreature = true;
+                }
+            }
+        }
+
+        if ((controllingCreature) && (Input.GetButtonDown("Interact")))
+        {
+            InventoryController.instance.equippedCreature = null;
+            controllingCreature = false;
+        }
 
         //Player Death
         if (playerHealth <= 0)
@@ -34,6 +71,102 @@ public class PlayerController : MonoBehaviour {
             killPlayer();
         }
 	}
+
+    private void moveCreature()
+    {
+        if (InventoryController.instance.getEquippedCreature() != null)
+        {
+            if (Input.GetButtonDown("Move/Select") && (!isPaused) && (controllingCreature))
+            {
+                CreatureMotor equippedCreature = InventoryController.instance.getEquippedCreature().GetComponent<CreatureMotor>();
+
+                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+                RaycastHit hitPoint;
+
+                if (Physics.Raycast(ray, out hitPoint))
+                {
+                    equippedCreature.moveToPoint(hitPoint.point);
+                }
+            }
+        }
+    }
+
+    private void moveSelect()
+    {
+        if (Input.GetButtonDown("Move/Select") && (!isPaused))
+        {
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+            RaycastHit hitFromRay;
+
+            if (Physics.Raycast(ray, out hitFromRay))
+            {
+                pMotor.moveToPoint(hitFromRay.point);
+
+                //Pick up Items
+                if (hitFromRay.collider.GetComponent<ItemController>())
+                {
+                    Item item = hitFromRay.collider.GetComponent<ItemController>().item;
+
+                    int range = item.range;
+
+                    int distance = (int)Vector3.Distance(transform.position, hitFromRay.point);
+
+                    ItemType _type = item.type;
+
+                    if (distance <= range)
+                    {
+                        if (_type == ItemType.Weapon)
+                        {
+                            Weapon _weapon = (Weapon)item;
+
+                            InventoryController.instance.addItem(item, _weapon);
+                        }
+                        else if ((_type == ItemType.Head) || (_type == ItemType.Chest) || (_type == ItemType.Legs))
+                        {
+                            Armor _armor = (Armor)item;
+
+                            InventoryController.instance.addItem(item, null, _armor);
+                        }
+                        else
+                        {
+                            InventoryController.instance.addItem(item);
+                        }
+
+
+                        hitFromRay.collider.gameObject.SetActive(false);
+                    }
+                }
+
+                //Attack Creatures
+                if (hitFromRay.collider.GetComponent<CreatureController>())
+                {
+                    if (InventoryController.instance.getEquippedWeapon() != null)
+                    {
+                        hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, InventoryController.instance.getEquippedWeapon().damage);
+                    }
+                    else
+                    {
+                        hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, baseDamage);
+                    }
+                }
+
+                //Attack Enemy
+                if (hitFromRay.collider.GetComponent<EnemyController>())
+                {
+                    if (InventoryController.instance.getEquippedWeapon() != null)
+                    {
+                        hitFromRay.collider.GetComponent<EnemyController>().takeDamage(InventoryController.instance.getEquippedWeapon().damage);
+                    }
+                    else
+                    {
+                        hitFromRay.collider.GetComponent<EnemyController>().takeDamage(baseDamage);
+                    }
+                }
+            }
+        }
+    }
 
     private void toggleMap()
     {
@@ -77,70 +210,27 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private void moveSelect()
+    public void takeDamage(int _damage)
     {
-        if (Input.GetButtonDown("Move/Select") && (!isPaused))
+        playerHealth -= _damage;
+
+        Debug.Log("Player Health: " + playerHealth);
+
+        if (playerHealth <= 0)
         {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit hitFromRay;
-
-            if (Physics.Raycast(ray, out hitFromRay))
-            {
-                pMotor.moveToPoint(hitFromRay.point);
-
-                if (hitFromRay.collider.GetComponent<ItemController>())
-                {
-
-
-                    Item item = hitFromRay.collider.GetComponent<ItemController>().item;
-
-                    int range = item.range;
-
-                    int distance = (int)Vector3.Distance(transform.position, hitFromRay.point);
-
-                    ItemType _type = item.type;
-
-                    if (distance <= range)
-                    {
-                        if (_type == ItemType.Weapon)
-                        {
-                            Weapon _weapon = (Weapon)item;
-
-                            InventoryController.instance.addItem(item, _weapon);
-                        }else if ((_type == ItemType.Head) || (_type == ItemType.Chest) || (_type == ItemType.Legs))
-                        {
-                            Armor _armor = (Armor)item;
-
-                            InventoryController.instance.addItem(item, null, _armor);
-                        }
-                        else
-                        {
-                            InventoryController.instance.addItem(item);
-                        }
-
-
-                        hitFromRay.collider.gameObject.SetActive(false);
-                    }
-                }
-
-                if (hitFromRay.collider.GetComponent<CreatureController>())
-                {
-                    if (InventoryController.instance.getEquippedWeapon() != null)
-                    {
-                        hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, InventoryController.instance.getEquippedWeapon().damage);
-                    }
-                    else
-                    {
-                        hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, baseDamage);
-                    }
-                }
-            }
+            killPlayer();
         }
+
+        return;
     }
 
     private void killPlayer()
     {
-        Debug.Log("Player Dead");
+        transform.position = startPoint;
+    }
+
+    public bool getControllingCreature()
+    {
+        return controllingCreature;
     }
 }

@@ -31,11 +31,21 @@ public class CameraFollow : MonoBehaviour {
 
     private void LateUpdate () {
 
-        //Follows specified target
-        cameraTransform.position = target.position + cameraOffset * currentZoom;
+        if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+        {
+            //Follows specified target
+            cameraTransform.position = target.position + cameraOffset * currentZoom;
 
-        //Makes camera point towards targets position
-        cameraTransform.LookAt(target.position + Vector3.up * pitch);
+            //Makes camera point towards targets position
+            cameraTransform.LookAt(target.position + Vector3.up * pitch);
+        }
+        else if(PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+        {
+            //Follows Creature
+            cameraTransform.position = InventoryController.instance.equippedCreature.transform.position + cameraOffset * currentZoom;
 
+            //Makes camera point towards creatures position
+            cameraTransform.LookAt(InventoryController.instance.equippedCreature.transform.position + Vector3.up * pitch);
+        }
     }
 }

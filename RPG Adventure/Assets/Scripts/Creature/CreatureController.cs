@@ -1,139 +1,106 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.AI;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(CreatureMotor))]
 public class CreatureController : MonoBehaviour {
 
     public Creature creature;
 
     private CreatureBehavior behavior;
 
-    private NavMeshAgent creatureAgent { get; set; }
-
-    private Vector3 newPosition;
-
-    private bool posPicked = false, isChasing = false;
-
-    private GameObject playerObject;
-
-    [SerializeField, Tooltip("The wait time between moves")]
-    private float waitTime = 5, paincWaitTime = 1;
-
-    private float paincSpeed;
+    private CreatureMotor creatureMotor;
 
     private int creatureHealth;
 
-    private void Awake()
-    {
-        playerObject = GameObject.Find("Player");
-    }
+    private bool isChasing = false;
 
     void Start () {
+        creatureMotor = GetComponent<CreatureMotor>();
+
         behavior = creature.creatureBehavior;
 
-        creatureAgent = GetComponent<NavMeshAgent>();
-
-        creatureAgent.speed = creature.creatureSpeed;
-
-        paincSpeed = creature.creatureSpeed * 3;
+        creatureHealth = creature.creatureHealth;
     }
 	
 	void LateUpdate () {
-
-        switch (behavior)
+        if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
         {
-            case CreatureBehavior.Passive:
-                passiveBehavior();
-                break;
+            switch (behavior)
+            {
+                case CreatureBehavior.Passive:
+                    passiveBehavior();
+                    break;
 
-            case CreatureBehavior.Aggressive:
-                aggressiveBehavior();
-                break;
+                case CreatureBehavior.Aggressive:
+                    aggressiveBehavior();
+                    break;
 
-            case CreatureBehavior.Neutral:
-                neutralBehavior();
-                break;
+                case CreatureBehavior.Neutral:
+                    neutralBehavior();
+                    break;
 
-            default:
-                Debug.Log("Behavior Unknown! " + behavior);
-                break;
+                default:
+                    Debug.Log("Behavior Unknown! " + behavior);
+                    break;
+            }
         }
-
+        else
+        {
+            StopAllCoroutines();
+        }
 	}
+
+    #region Creature Behaviors
 
     private void passiveBehavior()
     {
-        startWander();
+        creatureMotor.startWander();
+        return;
     }
 
     private void aggressiveBehavior()
     {
-        float distance = Vector3.Distance(transform.position, playerObject.transform.position);
+        float distance = Vector3.Distance(transform.position, PlayerManager.instance.playerObject.transform.position);
 
         if (distance <= creature.triggerRange)
         {
-            StopCoroutine(creatureWander());
-            isChasing = true;
-            creatureAgent.SetDestination(playerObject.transform.position);
+            StopCoroutine(creatureMotor.creatureWander());
+            creatureMotor.getCreatureAgent().SetDestination(PlayerManager.instance.playerObject.transform.position);
+            transform.LookAt(PlayerManager.instance.playerObject.transform.position);
         }
         else
         {
-            startWander();
+            creatureMotor.startWander();
+            return;
         }
     }
 
     private void neutralBehavior()
     {
-        float distance = Vector3.Distance(transform.position, playerObject.transform.position);
-
-        if (isChasing)
-        {
-            StopCoroutine(creatureWander());
-            creatureAgent.SetDestination(playerObject.transform.position);
-        }
-        else if (!isChasing)
-        {
-            startWander();
-        }
-
-
+        float distance = Vector3.Distance(transform.position, PlayerManager.instance.playerObject.transform.position);
 
         if (distance > creature.triggerRange)
         {
             isChasing = false;
         }
-    }
 
-    private void startWander()
-    {
-        if ((Random.value >= 0.6))
+        if (distance < creature.creatureAttackRange && isChasing)
         {
-            //Makes sure creature isnt to close
-            if (creatureAgent.remainingDistance <= creatureAgent.stoppingDistance)
-            {
-                //Makes sure path is complete and it position is at its previous destination
-                if (creatureAgent.pathStatus == NavMeshPathStatus.PathComplete && transform.position == creatureAgent.destination)
-                {
-                    //Starts wander coroutine
-                    StartCoroutine(creatureWander());
-
-                    //Sets posPicked back to false
-                    if (posPicked)
-                    {
-                        posPicked = false;
-                    }
-                }
-            }
-            return;
+            PlayerManager.instance.playerObject.GetComponent<PlayerController>().takeDamage(creature.attackDamage);
         }
 
-        //Checks if creature should wait
-        if (Random.value < 0.6)
+        if (isChasing)
         {
-            StartCoroutine(creatureWait());
+            StopCoroutine(creatureMotor.creatureWander());
+            creatureMotor.getCreatureAgent().SetDestination(PlayerManager.instance.playerObject.transform.position);
+            transform.LookAt(PlayerManager.instance.playerObject.transform.position);
+        }
+        else if (!isChasing)
+        {
+            creatureMotor.startWander();
         }
     }
+
+    #endregion
 
     public void takeDamage(Transform hitBy, int Damage)
     {
@@ -142,24 +109,54 @@ public class CreatureController : MonoBehaviour {
             case CreatureBehavior.Passive:
                 if (hitBy.name == "Player")
                 {
-                    StopCoroutine(creatureWander());
-                    creature.creatureHealth -= Damage;
-                    StartCoroutine(creaturePanic());
+                    StopCoroutine(creatureMotor.creatureWander());
+                    creatureHealth -= Damage;
+
+                    Debug.Log("Creature Health: " + creatureHealth);
+
+                    if (creatureHealth <= 0)
+                    {
+                        killCreature();
+                    }
+
+                    StartCoroutine(creatureMotor.creaturePanic());
                 }
                 else
                 {
-                    creature.creatureHealth -= Damage;
+                    creatureHealth -= Damage;
+
+                    Debug.Log("Creature Health: " + creatureHealth);
+
+                    if (creatureHealth <= 0)
+                    {
+                        killCreature();
+                    }
                 }
                 break;
 
             case CreatureBehavior.Aggressive:
-                creature.creatureHealth -= Damage;
+                creatureHealth -= Damage;
+
+                Debug.Log("Creature Health: " + creatureHealth);
+
+                if (creatureHealth <= 0)
+                {
+                    killCreature();
+                }
                 break;
 
             case CreatureBehavior.Neutral:
                 if (hitBy.name == "Player")
                 {
-                    creature.creatureHealth -= Damage;
+                    creatureHealth -= Damage;
+
+                    Debug.Log("Creature Health: " + creatureHealth);
+
+                    if (creatureHealth <= 0)
+                    {
+                        killCreature();
+                    }
+
                     if (!isChasing)
                     {
                         isChasing = true;
@@ -167,139 +164,26 @@ public class CreatureController : MonoBehaviour {
                 }
                 else
                 {
-                    creature.creatureHealth -= Damage;
-                    StartCoroutine(creaturePanic());
+                    creatureHealth -= Damage;
+
+                    Debug.Log("Creature Health: " + creatureHealth);
+
+                    if (creatureHealth <= 0)
+                    {
+                        killCreature();
+                    }
+
+                    StartCoroutine(creatureMotor.creaturePanic());
                 }
                 break;
         }
     }
 
-    #region Creature Panic
-    private IEnumerator creaturePanic()
+    public void killCreature()
     {
-      float creatureRange = Random.Range(creature.creatureRangeMin, creature.creatureRangeMax);
-
-        if (Random.value <= 0.2)
+        if (creatureHealth <= 0)
         {
-            newPosition = new Vector3(creatureAgent.transform.position.x + creatureRange, creatureAgent.transform.position.y, creatureAgent.transform.position.z + creatureRange);
+            gameObject.SetActive(false);
         }
-
-        if (Random.value >= 0.3 && Random.value <= 0.5)
-        {
-            newPosition = new Vector3(creatureAgent.transform.position.x - creatureRange, creatureAgent.transform.position.y, creatureAgent.transform.position.z - creatureRange);
-        }
-
-        if (Random.value >= 0.6 && Random.value <= 0.8)
-        {
-            newPosition = new Vector3(creatureAgent.transform.position.x - creatureRange, creatureAgent.transform.position.y, creatureAgent.transform.position.z + creatureRange);
-        }
-
-        if (Random.value >= 0.9)
-        {
-            newPosition = new Vector3(creatureAgent.transform.position.x + creatureRange, creatureAgent.transform.position.y, creatureAgent.transform.position.z - creatureRange);
-        }
-
-        if (newPosition != Vector3.zero)
-        {
-            creatureAgent.speed = paincSpeed;
-
-            creatureAgent.SetDestination(newPosition);
-
-            Debug.Log("Panicing...");
-        }
-
-        yield return new WaitForSeconds(paincWaitTime);
-    }
-    #endregion
-
-    #region Creature Wander
-    private IEnumerator creatureWander()
-    {
-        creatureAgent.speed = creature.creatureSpeed;
-
-        if (creatureAgent.pathStatus == NavMeshPathStatus.PathComplete)
-        {
-            yield return new WaitForSeconds(waitTime);
-
-            float creatureRange = Random.Range(creature.creatureRangeMin, creature.creatureRangeMax);
-
-            if (!posPicked)
-            {
-                if (Random.value <= 0.2)
-                {
-                    if (!posPicked)
-                    {
-                        newPosition = new Vector3(creatureAgent.transform.position.x + creatureRange, creatureAgent.transform.position.y, creatureAgent.transform.position.z + creatureRange);
-
-                        if (!posPicked)
-                        {
-                            posPicked = true;
-                        }
-                    }
-
-                    yield return new WaitForSeconds(waitTime / 2);
-                }
-
-                if (Random.value >= 0.3 && Random.value <= 0.5)
-                {
-                    if (!posPicked)
-                    {
-                        newPosition = new Vector3(creatureAgent.transform.position.x - creatureRange, creatureAgent.transform.position.y, creatureAgent.transform.position.z - creatureRange);
-
-                        if (!posPicked)
-                        {
-                            posPicked = true;
-                        }
-                    }
-
-                    yield return new WaitForSeconds(waitTime / 2);
-                }
-
-                if (Random.value >= 0.6 && Random.value <= 0.8)
-                {
-                    if (!posPicked)
-                    {
-                        newPosition = new Vector3(creatureAgent.transform.position.x - creatureRange, creatureAgent.transform.position.y, creatureAgent.transform.position.z + creatureRange);
-
-                        if (!posPicked)
-                        {
-                            posPicked = true;
-                        }
-                    }
-
-                    yield return new WaitForSeconds(waitTime / 2);
-                }
-
-                if (Random.value >= 0.9)
-                {
-                    if (!posPicked)
-                    {
-                        newPosition = new Vector3(creatureAgent.transform.position.x + creatureRange, creatureAgent.transform.position.y, creatureAgent.transform.position.z - creatureRange);
-
-                        if (!posPicked)
-                        {
-                            posPicked = true;
-                        }
-                    }
-
-                    yield return new WaitForSeconds(waitTime / 2);
-                }
-            }
-        }
-
-        if (newPosition != Vector3.zero && !creatureAgent.pathPending && creatureAgent.pathStatus != NavMeshPathStatus.PathInvalid && creatureAgent.pathStatus == NavMeshPathStatus.PathComplete)
-        {
-            creatureAgent.SetDestination(newPosition);
-
-            yield return new WaitForSeconds(waitTime);
-        }
-    }
-
-    #endregion
-
-    private IEnumerator creatureWait()
-    {
-        //Makes creature wait for the waitTime
-        yield return new WaitForSeconds(waitTime);
     }
 }

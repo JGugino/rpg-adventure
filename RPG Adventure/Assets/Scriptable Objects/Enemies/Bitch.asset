@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab703cd87b704a4db2fe078251af918, type: 3}
+  m_Name: Bitch
+  m_EditorClassIdentifier: 
+  enemyName: Bitch
+  enemyAttack: 15
+  enemyDefense: 35
+  enemyHealth: 100
+  enemySpeed: 10
+  enemyTriggerRange: 25
+  enemyAttackRange: 10
+  enemyRangeMin: 25
+  enemyRangeMax: 30
+  enemyAbility: 0
