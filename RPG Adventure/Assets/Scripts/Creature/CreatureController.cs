@@ -11,7 +11,7 @@ public class CreatureController : MonoBehaviour {
 
     private int creatureHealth;
 
-    private bool isChasing = false;
+    private bool isChasing = false, isDead = false;
 
     void Start () {
         creatureMotor = GetComponent<CreatureMotor>();
@@ -114,12 +114,15 @@ public class CreatureController : MonoBehaviour {
 
                     Debug.Log("Creature Health: " + creatureHealth);
 
-                    if (creatureHealth <= 0)
+                    if (creatureHealth <= 0 && !isDead)
                     {
                         killCreature();
                     }
 
-                    StartCoroutine(creatureMotor.creaturePanic());
+                    if (!isDead)
+                    {
+                        StartCoroutine(creatureMotor.creaturePanic());
+                    }
                 }
                 else
                 {
@@ -183,6 +186,7 @@ public class CreatureController : MonoBehaviour {
     {
         if (creatureHealth <= 0)
         {
+            isDead = true;
             gameObject.SetActive(false);
         }
     }

@@ -54,12 +54,12 @@ public class CameraOrbit : MonoBehaviour {
         {
             if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
             {
-                transform.RotateAround(cameraFollow.target.position, Vector3.up, horRotateSpeed * Time.deltaTime);
+                transform.RotateAround(cameraFollow.target.position, Vector3.up, -horRotateSpeed * Time.deltaTime);
             }
             else if (PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
             {
 
-                transform.RotateAround(InventoryController.instance.equippedCreature.transform.position, Vector3.up, horRotateSpeed * Time.deltaTime);
+                transform.RotateAround(InventoryController.instance.equippedCreature.transform.position, Vector3.up, -horRotateSpeed * Time.deltaTime);
             }
 
         }
@@ -67,11 +67,11 @@ public class CameraOrbit : MonoBehaviour {
         {
             if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
             {
-                transform.RotateAround(cameraFollow.target.position, Vector3.up, -horRotateSpeed * Time.deltaTime);
+                transform.RotateAround(cameraFollow.target.position, Vector3.up, horRotateSpeed * Time.deltaTime);
             }
             else if (PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
             {
-                transform.RotateAround(InventoryController.instance.equippedCreature.transform.position, Vector3.up, -horRotateSpeed * Time.deltaTime); 
+                transform.RotateAround(InventoryController.instance.equippedCreature.transform.position, Vector3.up, horRotateSpeed * Time.deltaTime); 
             }
         }
         #endregion

@@ -227,6 +227,8 @@ public class PlayerController : MonoBehaviour {
     private void killPlayer()
     {
         transform.position = startPoint;
+
+        playerHealth = playerMaxHealth;
     }
 
     public bool getControllingCreature()
