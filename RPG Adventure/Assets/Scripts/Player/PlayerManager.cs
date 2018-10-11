@@ -10,10 +10,6 @@ public class PlayerManager : MonoBehaviour {
     private void Awake()
     {
         instance = this;
-    }
-
-    private void Start()
-    {
         playerObject = GameObject.Find("Player");
     }
 }

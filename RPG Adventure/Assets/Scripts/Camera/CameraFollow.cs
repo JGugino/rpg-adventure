@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraFollow : MonoBehaviour {
 
+    [HideInInspector]
     public Transform target;
 
     public float pitch = 2f;
@@ -27,9 +26,13 @@ public class CameraFollow : MonoBehaviour {
     {
         //Gets camera transform position
         cameraTransform = GetComponent<Transform>();
+
+        target = PlayerManager.instance.playerObject.transform;
     }
 
     private void LateUpdate () {
+
+        target = PlayerManager.instance.playerObject.transform;
 
         if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
         {
@@ -39,7 +42,7 @@ public class CameraFollow : MonoBehaviour {
             //Makes camera point towards targets position
             cameraTransform.LookAt(target.position + Vector3.up * pitch);
         }
-        else if(PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+        else if (PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
         {
             //Follows Creature
             cameraTransform.position = InventoryController.instance.equippedCreature.transform.position + cameraOffset * currentZoom;

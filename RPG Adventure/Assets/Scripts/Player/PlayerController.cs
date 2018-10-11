@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(PlayerMotor))]
 public class PlayerController : MonoBehaviour {
@@ -11,9 +9,9 @@ public class PlayerController : MonoBehaviour {
 
     private int baseDamage = 3;
 
-    private PlayerMotor pMotor;
+    private float attackRange = 10, moveRange = 30;
 
-    private bool isPaused = false;
+    private PlayerMotor pMotor;
 
     private bool controllingCreature = false;
 
@@ -28,55 +26,64 @@ public class PlayerController : MonoBehaviour {
         playerHealth = playerMaxHealth;
     }
 
+    private void Start()
+    {
+        mainCamera = Camera.main;
+    }
+
     void Update () {
 
-        if (!controllingCreature)
+        if (!GameController.instance.isPaused)
         {
-            moveSelect();
-        }
-        else if (controllingCreature)
-        {
-            moveCreature();
+            if (!controllingCreature)
+            {
+                moveSelect();
+            }
+            else if (controllingCreature)
+            {
+                moveCreature();
+            }
+
+
+            if (Input.GetButtonDown("Use"))
+            {
+                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+                RaycastHit hitPoint;
+
+                if (Physics.Raycast(ray, out hitPoint))
+                {
+                    if (hitPoint.collider.GetComponent<CreatureController>())
+                    {
+                        InventoryController.instance.equippedCreature = hitPoint.collider.gameObject;
+                        controllingCreature = true;
+                    }
+                }
+            }
+
+            if ((controllingCreature) && (Input.GetButtonDown("Interact")))
+            {
+                InventoryController.instance.equippedCreature = null;
+                controllingCreature = false;
+            }
+
+            //Player Death
+            if (playerHealth <= 0)
+            {
+                killPlayer();
+            }
         }
 
         toggleInventory();
 
         toggleMap();
-
-        if (Input.GetButtonDown("Use"))
-        {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit hitPoint;
-
-            if (Physics.Raycast(ray, out hitPoint))
-            {
-                if (hitPoint.collider.GetComponent<CreatureController>())
-                {
-                    InventoryController.instance.equippedCreature = hitPoint.collider.gameObject;
-                    controllingCreature = true;
-                }
-            }
-        }
-
-        if ((controllingCreature) && (Input.GetButtonDown("Interact")))
-        {
-            InventoryController.instance.equippedCreature = null;
-            controllingCreature = false;
-        }
-
-        //Player Death
-        if (playerHealth <= 0)
-        {
-            killPlayer();
-        }
 	}
 
     private void moveCreature()
     {
         if (InventoryController.instance.getEquippedCreature() != null)
         {
-            if (Input.GetButtonDown("Move/Select") && (!isPaused) && (controllingCreature))
+            if (Input.GetButtonDown("Move/Select") && (!GameController.instance.isPaused) && (controllingCreature))
             {
                 CreatureMotor equippedCreature = InventoryController.instance.getEquippedCreature().GetComponent<CreatureMotor>();
 
@@ -94,7 +101,7 @@ public class PlayerController : MonoBehaviour {
 
     private void moveSelect()
     {
-        if (Input.GetButtonDown("Move/Select") && (!isPaused))
+        if (Input.GetButtonDown("Move/Select") && (!GameController.instance.isPaused))
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
@@ -102,66 +109,73 @@ public class PlayerController : MonoBehaviour {
 
             if (Physics.Raycast(ray, out hitFromRay))
             {
-                pMotor.moveToPoint(hitFromRay.point);
+                int distance = (int)Vector3.Distance(transform.position, hitFromRay.point);
 
-                //Pick up Items
-                if (hitFromRay.collider.GetComponent<ItemController>())
+                if (distance <= moveRange)
                 {
-                    Item item = hitFromRay.collider.GetComponent<ItemController>().item;
+                    pMotor.moveToPoint(hitFromRay.point);
 
-                    int range = item.range;
-
-                    int distance = (int)Vector3.Distance(transform.position, hitFromRay.point);
-
-                    ItemType _type = item.type;
-
-                    if (distance <= range)
+                    //Pick up Items
+                    if (hitFromRay.collider.GetComponent<ItemController>())
                     {
-                        if (_type == ItemType.Weapon)
+                        Item item = hitFromRay.collider.GetComponent<ItemController>().item;
+
+                        int range = item.range;
+
+                        ItemType _type = item.type;
+
+                        if (distance <= range)
                         {
-                            Weapon _weapon = (Weapon)item;
+                            if (_type == ItemType.Weapon)
+                            {
+                                Weapon _weapon = (Weapon)item;
 
-                            InventoryController.instance.addItem(item, _weapon);
+                                InventoryController.instance.addItem(item, _weapon);
+                            }
+                            else if ((_type == ItemType.Head) || (_type == ItemType.Chest) || (_type == ItemType.Legs))
+                            {
+                                Armor _armor = (Armor)item;
+
+                                InventoryController.instance.addItem(item, null, _armor);
+                            }
+                            else
+                            {
+                                InventoryController.instance.addItem(item);
+                            }
+
+
+                            hitFromRay.collider.gameObject.SetActive(false);
                         }
-                        else if ((_type == ItemType.Head) || (_type == ItemType.Chest) || (_type == ItemType.Legs))
+                    }
+
+                    if (distance <= attackRange) {
+
+                        //Attack Creatures
+                        if (hitFromRay.collider.GetComponent<CreatureController>())
                         {
-                            Armor _armor = (Armor)item;
-
-                            InventoryController.instance.addItem(item, null, _armor);
+                            if (InventoryController.instance.getEquippedWeapon() != null)
+                            {
+                                hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, InventoryController.instance.getEquippedWeapon().damage);
+                            }
+                            else
+                            {
+                                hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, baseDamage);
+                            }
                         }
-                        else
+
+                        //Attack Enemy
+                        if (hitFromRay.collider.GetComponent<EnemyController>())
                         {
-                            InventoryController.instance.addItem(item);
+                            if (InventoryController.instance.getEquippedWeapon() != null)
+                            {
+                                hitFromRay.collider.GetComponent<EnemyController>().takeDamage(InventoryController.instance.getEquippedWeapon().damage);
+                            }
+                            else
+                            {
+                                hitFromRay.collider.GetComponent<EnemyController>().takeDamage(baseDamage);
+                            }
                         }
 
-
-                        hitFromRay.collider.gameObject.SetActive(false);
-                    }
-                }
-
-                //Attack Creatures
-                if (hitFromRay.collider.GetComponent<CreatureController>())
-                {
-                    if (InventoryController.instance.getEquippedWeapon() != null)
-                    {
-                        hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, InventoryController.instance.getEquippedWeapon().damage);
-                    }
-                    else
-                    {
-                        hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, baseDamage);
-                    }
-                }
-
-                //Attack Enemy
-                if (hitFromRay.collider.GetComponent<EnemyController>())
-                {
-                    if (InventoryController.instance.getEquippedWeapon() != null)
-                    {
-                        hitFromRay.collider.GetComponent<EnemyController>().takeDamage(InventoryController.instance.getEquippedWeapon().damage);
-                    }
-                    else
-                    {
-                        hitFromRay.collider.GetComponent<EnemyController>().takeDamage(baseDamage);
                     }
                 }
             }
@@ -176,12 +190,12 @@ public class PlayerController : MonoBehaviour {
             {
                 GUIController.instance.toggleMap(true);
                 GUIController.instance.toggleMinimap(false);
-                isPaused = true;
+                GameController.instance.isPaused = true;
             }else if (GUIController.instance.mapOpen)
             {
                 GUIController.instance.toggleMap(false);
                 GUIController.instance.toggleMinimap(true);
-                isPaused = false;
+                GameController.instance.isPaused = false;
             }
         }
     }
@@ -194,7 +208,7 @@ public class PlayerController : MonoBehaviour {
             {
                 GUIController.instance.toggleMinimap(true);
                 GUIController.instance.toggleInventory(false);
-                isPaused = false;
+                GameController.instance.isPaused = false;
             }
             else if (!GUIController.instance.inventoryObject.activeSelf)
             {
@@ -205,7 +219,7 @@ public class PlayerController : MonoBehaviour {
                 GUIController.instance.toggleMinimap(false);
                 GUIController.instance.toggleInventory(true);
                 InventoryController.instance.createPrefab();
-                isPaused = true;
+                GameController.instance.isPaused = true;
             }
         }
     }

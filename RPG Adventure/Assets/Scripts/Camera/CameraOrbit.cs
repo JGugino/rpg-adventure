@@ -20,60 +20,66 @@ public class CameraOrbit : MonoBehaviour {
 
     private void Update()
     {
-        #region Camera Zoom Controls
-        if (canZoom)
+        if (!GameController.instance.isPaused)
         {
-            cameraFollow.currentZoom -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+            #region Camera Zoom Controls
+            if (canZoom)
+            {
+                cameraFollow.currentZoom -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
 
-            cameraFollow.currentZoom = Mathf.Clamp(cameraFollow.currentZoom, minZoom, maxZoom);
-        }
-        #endregion
+                cameraFollow.currentZoom = Mathf.Clamp(cameraFollow.currentZoom, minZoom, maxZoom);
+            }
+            #endregion
 
-        #region Vertical Camera Movement
-        float _direction = Input.GetAxis("Vertical");
+            #region Vertical Camera Movement
+            float _direction = Input.GetAxis("Vertical");
 
-        if (_direction < 0 && currentTilt > -maxXTilt)
-        {
-            currentTilt--;
-            transform.Rotate(new Vector3(verRotateSpeed * Time.deltaTime, 0, 0));
+            if (_direction < 0 && currentTilt > -maxXTilt)
+            {
+                currentTilt--;
+                transform.Rotate(new Vector3(verRotateSpeed * Time.deltaTime, 0, 0));
+            }
+            else if (_direction > 0 && currentTilt < maxXTilt)
+            {
+                currentTilt++;
+                transform.Rotate(new Vector3(-verRotateSpeed * Time.deltaTime, 0, 0));
+            }
+            #endregion
         }
-        else if (_direction > 0 && currentTilt < maxXTilt)
-        {
-            currentTilt++;
-            transform.Rotate(new Vector3(-verRotateSpeed * Time.deltaTime, 0, 0));
-        }
-        #endregion
     }
 
     private void LateUpdate () {
 
-        #region Horizontal Camera Controls
-        float _direction = Input.GetAxis("Horizontal");
-
-        if (_direction > 0)
+        if (!GameController.instance.isPaused)
         {
-            if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
-            {
-                transform.RotateAround(cameraFollow.target.position, Vector3.up, -horRotateSpeed * Time.deltaTime);
-            }
-            else if (PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
-            {
+            #region Horizontal Camera Controls
+            float _direction = Input.GetAxis("Horizontal");
 
-                transform.RotateAround(InventoryController.instance.equippedCreature.transform.position, Vector3.up, -horRotateSpeed * Time.deltaTime);
-            }
+            if (_direction > 0)
+            {
+                if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+                {
+                    transform.RotateAround(cameraFollow.target.position, Vector3.up, -horRotateSpeed * Time.deltaTime);
+                }
+                else if (PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+                {
 
-        }
-        else if (_direction < 0)
-        {
-            if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
-            {
-                transform.RotateAround(cameraFollow.target.position, Vector3.up, horRotateSpeed * Time.deltaTime);
+                    transform.RotateAround(InventoryController.instance.equippedCreature.transform.position, Vector3.up, -horRotateSpeed * Time.deltaTime);
+                }
+
             }
-            else if (PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+            else if (_direction < 0)
             {
-                transform.RotateAround(InventoryController.instance.equippedCreature.transform.position, Vector3.up, horRotateSpeed * Time.deltaTime); 
+                if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+                {
+                    transform.RotateAround(cameraFollow.target.position, Vector3.up, horRotateSpeed * Time.deltaTime);
+                }
+                else if (PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+                {
+                    transform.RotateAround(InventoryController.instance.equippedCreature.transform.position, Vector3.up, horRotateSpeed * Time.deltaTime);
+                }
             }
+            #endregion
         }
-        #endregion
     }
 }

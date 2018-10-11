@@ -57,6 +57,8 @@ public class MapController : MonoBehaviour {
 
     void LateUpdate () {
 
+        target = PlayerManager.instance.playerObject.transform;
+
         GUIController.instance.mapCamera.transform.position = Vector3.Lerp(new Vector3(transform.position.x, transform.position.y, transform.position.z), new Vector3(target.position.x, transform.position.y, target.position.z), Time.deltaTime * 3f);
 
         if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
