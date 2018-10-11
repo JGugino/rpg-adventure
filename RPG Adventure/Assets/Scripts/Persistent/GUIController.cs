@@ -7,7 +7,7 @@ public class GUIController : MonoBehaviour {
 
     public static GUIController instance;
 
-    public bool minimapOpen = true, mapOpen = false;
+    public bool minimapOpen = true, mapOpen = false, questsOpen = false;
 
     #region Inventory Variables
     public GameObject weaponSlotPrefab, defenseSlotPrefab, keySlotPrefab;
@@ -28,15 +28,36 @@ public class GUIController : MonoBehaviour {
     public Button weaponEquip, headEquip, chestEquip, legsEquip;
     #endregion
 
+    #region Map Variables
     [HideInInspector]
     public GameObject mapObject, minimapObject;
 
     [HideInInspector]
     public Camera mapCamera, minimapCamera;
+    #endregion
+
+    #region Quest Variables
+    public GameObject questPrefab;
+
+    [HideInInspector]
+    public GameObject questParent, questsObject;
+    #endregion
 
     private void Awake()
     {
         instance = this;
+    }
+
+    public void Start()
+    {
+        questParent = GameObject.Find("Quests Parent");
+
+        questsObject = GameObject.Find("Quests");
+
+        if (!questsObject)
+        {
+            questsObject.SetActive(questsOpen);
+        }
     }
 
     public void findInventoryUI()
@@ -92,6 +113,21 @@ public class GUIController : MonoBehaviour {
         toggleMap(mapOpen);
     }
 
+    public void toggleQuests(bool _open)
+    {
+        if (_open)
+        {
+            questsOpen = _open;
+            questsObject.SetActive(questsOpen);
+            return;
+        }else if (!_open)
+        {
+            questsOpen = _open;
+            questsObject.SetActive(questsObject);
+            return;
+        }
+    }
+
     public void toggleMap(bool _open)
     {
         if (_open)
@@ -99,11 +135,13 @@ public class GUIController : MonoBehaviour {
             mapObject.SetActive(true);
             mapCamera.gameObject.SetActive(true);
             mapOpen = true;
+            return;
         }else if (!_open)
         {
             mapObject.SetActive(false);
             mapCamera.gameObject.SetActive(false);
             mapOpen = false;
+            return;
         }
     }
 
@@ -113,11 +151,13 @@ public class GUIController : MonoBehaviour {
         {
             minimapObject.SetActive(true);
             minimapOpen = true;
+            return;
         }
         else if (!_open)
         {
             minimapObject.SetActive(false);
             minimapOpen = false;
+            return;
         }
     }
 
