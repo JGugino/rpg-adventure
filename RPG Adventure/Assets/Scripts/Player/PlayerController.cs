@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(PlayerMotor))]
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerController : MonoBehaviour {
 
-    public Camera mainCamera;
+    private Camera mainCamera;
 
     private int playerHealth = 100, playerMaxHealth = 100;
 
@@ -35,194 +36,84 @@ public class PlayerController : MonoBehaviour {
 
         if (!GameController.instance.isPaused)
         {
-            if (!controllingCreature)
-            {
-                moveSelect();
-            }
-            else if (controllingCreature)
-            {
-                moveCreature();
-            }
-
-
-            if (Input.GetButtonDown("Use"))
-            {
-                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-                RaycastHit hitPoint;
-
-                if (Physics.Raycast(ray, out hitPoint))
-                {
-                    if (hitPoint.collider.GetComponent<CreatureController>())
-                    {
-                        InventoryController.instance.equippedCreature = hitPoint.collider.gameObject;
-                        controllingCreature = true;
-                    }
-                }
-            }
-
-            if ((controllingCreature) && (Input.GetButtonDown("Interact")))
-            {
-                InventoryController.instance.equippedCreature = null;
-                controllingCreature = false;
-            }
-
             //Player Death
             if (playerHealth <= 0)
             {
                 killPlayer();
             }
         }
-
-        toggleInventory();
-
-        toggleMap();
 	}
 
-    private void moveCreature()
+    #region Player Movement
+    public void moveCharacter()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+        RaycastHit hitFromRay;
+
+        if (Physics.Raycast(ray, out hitFromRay))
+        {
+            int distance = (int)Vector3.Distance(transform.position, hitFromRay.point);
+
+            if (distance <= moveRange)
+            {
+                #region Player Attacking
+                if (distance <= attackRange)
+                {
+                    //Attack Creatures
+                    if (hitFromRay.collider.GetComponent<CreatureController>())
+                    {
+                        if (InventoryController.instance.getEquippedWeapon() != null)
+                        {
+                            hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, InventoryController.instance.getEquippedWeapon().damage);
+                            return;
+                        }
+                        else
+                        {
+                            hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, baseDamage);
+                            return;
+                        }
+                    }
+
+                    //Attack Enemy
+                    if (hitFromRay.collider.GetComponent<EnemyController>())
+                    {
+                        if (InventoryController.instance.getEquippedWeapon() != null)
+                        {
+                            hitFromRay.collider.GetComponent<EnemyController>().takeDamage(InventoryController.instance.getEquippedWeapon().damage);
+                            return;
+                        }
+                        else
+                        {
+                            hitFromRay.collider.GetComponent<EnemyController>().takeDamage(baseDamage);
+                            return;
+                        }
+                    }
+                }
+                #endregion
+
+                pMotor.moveToPoint(hitFromRay.point);
+            }
+        }
+    }
+
+    public void moveCreature()
     {
         if (InventoryController.instance.getEquippedCreature() != null)
         {
-            if (Input.GetButtonDown("Move/Select") && (!GameController.instance.isPaused) && (controllingCreature))
-            {
-                CreatureMotor equippedCreature = InventoryController.instance.getEquippedCreature().GetComponent<CreatureMotor>();
+            CreatureMotor equippedCreature = InventoryController.instance.getEquippedCreature().GetComponent<CreatureMotor>();
 
-                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-                RaycastHit hitPoint;
-
-                if (Physics.Raycast(ray, out hitPoint))
-                {
-                    equippedCreature.moveToPoint(hitPoint.point);
-                }
-            }
-        }
-    }
-
-    private void moveSelect()
-    {
-        if (Input.GetButtonDown("Move/Select") && (!GameController.instance.isPaused))
-        {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
-            RaycastHit hitFromRay;
+            RaycastHit hitPoint;
 
-            if (Physics.Raycast(ray, out hitFromRay))
+            if (Physics.Raycast(ray, out hitPoint))
             {
-                int distance = (int)Vector3.Distance(transform.position, hitFromRay.point);
-
-                if (distance <= moveRange)
-                {
-                    pMotor.moveToPoint(hitFromRay.point);
-
-                    //Pick up Items
-                    if (hitFromRay.collider.GetComponent<ItemController>())
-                    {
-                        Item item = hitFromRay.collider.GetComponent<ItemController>().item;
-
-                        int range = item.range;
-
-                        ItemType _type = item.type;
-
-                        if (distance <= range)
-                        {
-                            if (_type == ItemType.Weapon)
-                            {
-                                Weapon _weapon = (Weapon)item;
-
-                                InventoryController.instance.addItem(item, _weapon);
-                            }
-                            else if ((_type == ItemType.Head) || (_type == ItemType.Chest) || (_type == ItemType.Legs))
-                            {
-                                Armor _armor = (Armor)item;
-
-                                InventoryController.instance.addItem(item, null, _armor);
-                            }
-                            else
-                            {
-                                InventoryController.instance.addItem(item);
-                            }
-
-
-                            hitFromRay.collider.gameObject.SetActive(false);
-                        }
-                    }
-
-                    if (distance <= attackRange) {
-
-                        //Attack Creatures
-                        if (hitFromRay.collider.GetComponent<CreatureController>())
-                        {
-                            if (InventoryController.instance.getEquippedWeapon() != null)
-                            {
-                                hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, InventoryController.instance.getEquippedWeapon().damage);
-                            }
-                            else
-                            {
-                                hitFromRay.collider.GetComponent<CreatureController>().takeDamage(this.transform, baseDamage);
-                            }
-                        }
-
-                        //Attack Enemy
-                        if (hitFromRay.collider.GetComponent<EnemyController>())
-                        {
-                            if (InventoryController.instance.getEquippedWeapon() != null)
-                            {
-                                hitFromRay.collider.GetComponent<EnemyController>().takeDamage(InventoryController.instance.getEquippedWeapon().damage);
-                            }
-                            else
-                            {
-                                hitFromRay.collider.GetComponent<EnemyController>().takeDamage(baseDamage);
-                            }
-                        }
-
-                    }
-                }
+                equippedCreature.moveToPoint(hitPoint.point);
             }
         }
     }
-
-    private void toggleMap()
-    {
-        if (Input.GetButtonDown("Map"))
-        {
-            if (!GUIController.instance.mapOpen)
-            {
-                GUIController.instance.toggleMap(true);
-                GUIController.instance.toggleMinimap(false);
-                GameController.instance.isPaused = true;
-            }else if (GUIController.instance.mapOpen)
-            {
-                GUIController.instance.toggleMap(false);
-                GUIController.instance.toggleMinimap(true);
-                GameController.instance.isPaused = false;
-            }
-        }
-    }
-
-    private void toggleInventory()
-    {
-        if (Input.GetButtonDown("Inventory"))
-        {
-            if (GUIController.instance.inventoryObject.activeSelf)
-            {
-                GUIController.instance.toggleMinimap(true);
-                GUIController.instance.toggleInventory(false);
-                GameController.instance.isPaused = false;
-            }
-            else if (!GUIController.instance.inventoryObject.activeSelf)
-            {
-                if (GUIController.instance.mapOpen)
-                {
-                    GUIController.instance.toggleMap(false);
-                }
-                GUIController.instance.toggleMinimap(false);
-                GUIController.instance.toggleInventory(true);
-                InventoryController.instance.createPrefab();
-                GameController.instance.isPaused = true;
-            }
-        }
-    }
+    #endregion
 
     public void takeDamage(int _damage)
     {
@@ -248,5 +139,41 @@ public class PlayerController : MonoBehaviour {
     public bool getControllingCreature()
     {
         return controllingCreature;
+    }
+
+    public void setControllingCreature(bool _controlling)
+    {
+        controllingCreature = _controlling;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.GetComponent<ItemController>())
+        {
+            Item item = collision.collider.GetComponent<ItemController>().item;
+
+            int range = item.range;
+
+            ItemType _type = item.type;
+
+            if (_type == ItemType.Weapon)
+            {
+                Weapon _weapon = (Weapon)item;
+
+                InventoryController.instance.addItem(item, _weapon);
+            }
+            else if ((_type == ItemType.Head) || (_type == ItemType.Chest) || (_type == ItemType.Legs))
+            {
+                Armor _armor = (Armor)item;
+
+                InventoryController.instance.addItem(item, null, _armor);
+            }
+            else
+            {
+                InventoryController.instance.addItem(item);
+            }
+
+            collision.collider.gameObject.SetActive(false);
+        }
     }
 }

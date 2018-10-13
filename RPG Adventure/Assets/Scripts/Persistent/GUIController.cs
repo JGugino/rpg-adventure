@@ -54,7 +54,7 @@ public class GUIController : MonoBehaviour {
 
         questsObject = GameObject.Find("Quests");
 
-        if (!questsObject)
+        if (!questsOpen && questsObject.activeSelf)
         {
             questsObject.SetActive(questsOpen);
         }
@@ -117,13 +117,13 @@ public class GUIController : MonoBehaviour {
     {
         if (_open)
         {
-            questsOpen = _open;
-            questsObject.SetActive(questsOpen);
+            questsOpen = true;
+            questsObject.SetActive(true);
             return;
         }else if (!_open)
         {
-            questsOpen = _open;
-            questsObject.SetActive(questsObject);
+            questsOpen = false;
+            questsObject.SetActive(false);
             return;
         }
     }
