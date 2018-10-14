@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class QuestController : MonoBehaviour {
@@ -13,15 +14,33 @@ public class QuestController : MonoBehaviour {
 
     public List<Quest> completedQuests;
 
+    public Transform targetLocation;
+
     public void Awake()
     {
         instance = this;
     }
 
-    public void addQuest(Quest _quest)
+    private void Update()
+    {
+        if (activeQuest != null)
+        {
+            updateActiveQuestInfo(activeQuest);
+        }
+    }
+
+    public void addQuest(Quest _quest, Transform _location = null)
     {
         if (!playersQuests.Contains(_quest))
         {
+            if (_quest.questCompleteType == QuestCompleteType.Location)
+            {
+                if (_location != null)
+                {
+                    targetLocation = _location;
+                }
+            }
+
             playersQuests.Add(_quest);
 
             createQuestPrefab(_quest);
@@ -32,6 +51,61 @@ public class QuestController : MonoBehaviour {
         }
     }
 
+    public void removeQuest(Quest _quest)
+    {
+        if (playersQuests.Contains(_quest))
+        {
+            playersQuests.Remove(_quest);
+
+            removeQuestPrefab(_quest);
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    public void selectActiveQuest(Quest _quest)
+    {
+        if (activeQuest == null)
+        {
+            activeQuest = _quest;
+
+            updateActiveQuestInfo(_quest);
+        }
+        else
+        {
+            activeQuest = null;
+
+            activeQuest = _quest;
+
+            updateActiveQuestInfo(_quest);
+        }
+    }
+
+    public void updateActiveQuestInfo(Quest _quest)
+    {
+        GUIController.instance.activeQuestName.text = _quest.questName;
+
+        switch (_quest.questCompleteType)
+        {
+            case QuestCompleteType.Location:
+                float distance = 0;
+
+                if (targetLocation != null)
+                {
+                    distance = Vector3.Distance(PlayerManager.instance.playerObject.transform.position, targetLocation.position);
+                }
+                else
+                {
+                    Debug.Log("No target location set.");
+                }
+
+                GUIController.instance.activeQuestObjective.text = "Distance to location: " + Mathf.Round(distance);
+                break;
+        }
+    }
+
     private void createQuestPrefab(Quest _quest)
     {
         if (!GameObject.Find(_quest.questName))
@@ -39,6 +113,10 @@ public class QuestController : MonoBehaviour {
             GameObject createdPrefab = Instantiate(GUIController.instance.questPrefab, GUIController.instance.questParent.transform);
 
             createdPrefab.name = _quest.questName;
+
+            Button selectButton = createdPrefab.GetComponentInChildren<Button>();
+
+            selectButton.onClick.AddListener(delegate { selectActiveQuest(_quest); });
 
             TextMeshProUGUI[] texts = createdPrefab.GetComponentsInChildren<TextMeshProUGUI>();
 
@@ -55,6 +133,16 @@ public class QuestController : MonoBehaviour {
                     t.text = _quest.questDescription;
                 }
             }
+        }
+    }
+
+    private void removeQuestPrefab(Quest _quest)
+    {
+        GameObject prefabToRemove = GameObject.Find(_quest.questName);
+
+        if (prefabToRemove != null)
+        {
+            Destroy(prefabToRemove);
         }
     }
 }

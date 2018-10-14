@@ -16,8 +16,8 @@ MonoBehaviour:
   isCompleted: 0
   questType: 0
   questCompleteType: 1
-  itemToCollect: {fileID: 0}
-  creatureToCollect: {fileID: 0}
-  collectAmount: 0
-  enemyToKill: {fileID: 0}
-  enemyKillAmount: 0
+  itemToCollect: {fileID: 11400000, guid: 028b203d1fcf6094eb15c98aa56c660e, type: 2}
+  creatureToCollect: {fileID: 11400000, guid: c0c45776f3072074cbcd0ed00f50b054, type: 2}
+  collectAmount: 15
+  enemyToKill: {fileID: 11400000, guid: f07b49111d9ce4f448a8088ee3857df8, type: 2}
+  enemyKillAmount: 25

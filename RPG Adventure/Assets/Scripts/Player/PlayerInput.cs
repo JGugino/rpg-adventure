@@ -5,6 +5,8 @@ public class PlayerInput : MonoBehaviour {
 
     public Quest quest;
 
+    public Transform target;
+
     private PlayerController playerController;
 
     private void Start()
@@ -16,7 +18,10 @@ public class PlayerInput : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.F4))
         {
-            QuestController.instance.addQuest(quest);
+            QuestController.instance.addQuest(quest, target);
+        }else if (Input.GetKeyDown(KeyCode.F5))
+        {
+            QuestController.instance.removeQuest(quest);
         }
 
 

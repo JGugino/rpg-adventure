@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GUIController : MonoBehaviour {
 
@@ -41,6 +40,9 @@ public class GUIController : MonoBehaviour {
 
     [HideInInspector]
     public GameObject questParent, questsObject;
+
+    [HideInInspector]
+    public TextMeshProUGUI activeQuestName, activeQuestObjective;
     #endregion
 
     private void Awake()
@@ -53,6 +55,9 @@ public class GUIController : MonoBehaviour {
         questParent = GameObject.Find("Quests Parent");
 
         questsObject = GameObject.Find("Quests");
+
+        activeQuestName = GameObject.Find("Active Quest Name Text").GetComponent<TextMeshProUGUI>();
+        activeQuestObjective = GameObject.Find("Active Quest Objective Text").GetComponent<TextMeshProUGUI>();
 
         if (!questsOpen && questsObject.activeSelf)
         {
