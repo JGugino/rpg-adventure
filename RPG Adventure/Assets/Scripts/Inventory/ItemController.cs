@@ -19,7 +19,7 @@ public class ItemController : MonoBehaviour {
 
         if (distance <= range)
         {
-            transform.position -= Vector3.Lerp(transform.position, PlayerManager.instance.playerObject.transform.position, Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, PlayerManager.instance.playerObject.transform.position, Time.deltaTime);
         }
     }
 }
