@@ -14,7 +14,7 @@ MonoBehaviour:
   creatureName: Mad Doggo
   attackDamage: 35
   defenseAmount: 35
-  creatureHealth: 55
+  creatureHealth: 110
   creatureBond: 0
   creatureRangeMin: 15
   creatureRangeMax: 40

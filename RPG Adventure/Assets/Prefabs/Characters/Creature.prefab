@@ -76,6 +76,7 @@ GameObject:
   - component: {fileID: 54403093223348290}
   - component: {fileID: 65364641949362922}
   - component: {fileID: 114493395741339302}
+  - component: {fileID: 114614289674718066}
   - component: {fileID: 114194070758811146}
   m_Layer: 0
   m_Name: Creature
@@ -119,7 +120,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1816135729931424}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 440.7, y: 0, z: 457.14}
+  m_LocalPosition: {x: 247.11375, y: 0, z: 252.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4060395522383394}
@@ -303,8 +304,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1752e34d21d93c4a8cc70dfe0d45991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waitTime: 5
-  paincWaitTime: 1
 --- !u!114 &114493395741339302
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -316,7 +315,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad591311e692ea24d83bc604ad5f12c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114614289674718066
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1816135729931424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b659ec038f862ab4fbf44a28b2aa28b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   creature: {fileID: 11400000, guid: c0c45776f3072074cbcd0ed00f50b054, type: 2}
+  waitTime: 5
+  paincWaitTime: 1
+  attackDelay: 5
+  currentDelay: 0
+  posPicked: 0
 --- !u!135 &135591427154069014
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -354,7 +369,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_StoppingDistance: 6
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1

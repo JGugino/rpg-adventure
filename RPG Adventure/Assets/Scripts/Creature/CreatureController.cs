@@ -1,28 +1,35 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(CreatureMotor))]
+[RequireComponent(typeof(CreatureAI))]
 public class CreatureController : MonoBehaviour {
-
-    public Creature creature;
 
     private CreatureBehavior behavior;
 
     private CreatureMotor creatureMotor;
 
+    private CreatureAI creatureAI;
+
     private int creatureHealth;
 
     private bool isChasing = false, isDead = false;
 
+    private float activeDistance = 100f;
+
     void Start () {
         creatureMotor = GetComponent<CreatureMotor>();
 
-        behavior = creature.creatureBehavior;
+        creatureAI = GetComponent<CreatureAI>();
 
-        creatureHealth = creature.creatureHealth;
+        behavior = creatureAI.creature.creatureBehavior;
+
+        creatureHealth = creatureAI.creature.creatureHealth;
     }
 	
 	void LateUpdate () {
-        if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+        float distance = Vector3.Distance(transform.position, PlayerManager.instance.playerObject.transform.position);
+
+        if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature() && distance <= activeDistance)
         {
             switch (behavior)
             {
@@ -61,13 +68,27 @@ public class CreatureController : MonoBehaviour {
     {
         float distance = Vector3.Distance(transform.position, PlayerManager.instance.playerObject.transform.position);
 
-        if (distance <= creature.triggerRange)
+        if (distance > creatureAI.creature.triggerRange)
         {
-            StopCoroutine(creatureMotor.creatureWander());
-            creatureMotor.getCreatureAgent().SetDestination(PlayerManager.instance.playerObject.transform.position);
-            transform.LookAt(PlayerManager.instance.playerObject.transform.position);
+            isChasing = false;
         }
         else
+        {
+            isChasing = true;
+        }
+
+        if (distance <= creatureAI.creature.creatureAttackRange && isChasing)
+        {
+            creatureAI.creatureAttack();
+        }
+
+        if (isChasing)
+        {
+            StopCoroutine(creatureMotor.getCreatureAI().creatureWander());
+            creatureMotor.getCreatureAI().getCreatureAgent().SetDestination(PlayerManager.instance.playerObject.transform.position);
+            transform.LookAt(PlayerManager.instance.playerObject.transform.position);
+        }
+        else if (!isChasing) 
         {
             creatureMotor.startWander();
             return;
@@ -78,20 +99,20 @@ public class CreatureController : MonoBehaviour {
     {
         float distance = Vector3.Distance(transform.position, PlayerManager.instance.playerObject.transform.position);
 
-        if (distance > creature.triggerRange)
+        if (distance > creatureAI.creature.triggerRange)
         {
             isChasing = false;
         }
 
-        if (distance < creature.creatureAttackRange && isChasing)
+        if (distance < creatureAI.creature.creatureAttackRange && isChasing)
         {
-            PlayerManager.instance.playerObject.GetComponent<PlayerController>().takeDamage(creature.attackDamage);
+            creatureAI.creatureAttack();
         }
 
         if (isChasing)
         {
-            StopCoroutine(creatureMotor.creatureWander());
-            creatureMotor.getCreatureAgent().SetDestination(PlayerManager.instance.playerObject.transform.position);
+            StopCoroutine(creatureMotor.getCreatureAI().creatureWander());
+            creatureMotor.getCreatureAI().getCreatureAgent().SetDestination(PlayerManager.instance.playerObject.transform.position);
             transform.LookAt(PlayerManager.instance.playerObject.transform.position);
         }
         else if (!isChasing)
@@ -104,12 +125,12 @@ public class CreatureController : MonoBehaviour {
 
     public void takeDamage(Transform hitBy, int Damage)
     {
-        switch (creature.creatureBehavior)
+        switch (creatureAI.creature.creatureBehavior)
         {
             case CreatureBehavior.Passive:
                 if (hitBy.name == "Player")
                 {
-                    StopCoroutine(creatureMotor.creatureWander());
+                    StopCoroutine(creatureMotor.getCreatureAI().creatureWander());
                     creatureHealth -= Damage;
 
                     Debug.Log("Creature Health: " + creatureHealth);
@@ -121,7 +142,7 @@ public class CreatureController : MonoBehaviour {
 
                     if (!isDead)
                     {
-                        StartCoroutine(creatureMotor.creaturePanic());
+                        StartCoroutine(creatureMotor.getCreatureAI().creaturePanic());
                     }
                 }
                 else
@@ -176,7 +197,7 @@ public class CreatureController : MonoBehaviour {
                         killCreature();
                     }
 
-                    StartCoroutine(creatureMotor.creaturePanic());
+                    StartCoroutine(creatureMotor.getCreatureAI().creaturePanic());
                 }
                 break;
         }
@@ -188,6 +209,8 @@ public class CreatureController : MonoBehaviour {
         {
             isDead = true;
             gameObject.SetActive(false);
+            GameController.instance.totalActiveCreatures--;
+            return;
         }
     }
 }

@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
+using TMPro;
 
 [RequireComponent(typeof(PlayerMotor))]
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerController : MonoBehaviour {
+
+    public TextMeshProUGUI healthText;
 
     private Camera mainCamera;
 
@@ -10,7 +13,7 @@ public class PlayerController : MonoBehaviour {
 
     private int baseDamage = 3;
 
-    private float attackRange = 10, moveRange = 30;
+    private float attackRange = 20, moveRange = 80;
 
     private PlayerMotor pMotor;
 
@@ -42,6 +45,8 @@ public class PlayerController : MonoBehaviour {
                 killPlayer();
             }
         }
+
+        healthText.text = "Health: " + playerHealth;
 	}
 
     #region Player Movement
@@ -131,6 +136,8 @@ public class PlayerController : MonoBehaviour {
 
     private void killPlayer()
     {
+        pMotor.getPlayerAgent().ResetPath();
+
         transform.position = startPoint;
 
         playerHealth = playerMaxHealth;

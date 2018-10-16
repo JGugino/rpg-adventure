@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class PlayerMotor : MonoBehaviour {
 
-    private NavMeshAgent navAgent { get; set; }
+    private NavMeshAgent navAgent;
 
     private void Start()
     {
@@ -15,5 +15,10 @@ public class PlayerMotor : MonoBehaviour {
     public void moveToPoint(Vector3 _position)
     {
         navAgent.SetDestination(_position);
+    }
+
+    public NavMeshAgent getPlayerAgent()
+    {
+        return navAgent;
     }
 }

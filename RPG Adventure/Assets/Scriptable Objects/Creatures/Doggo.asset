@@ -14,9 +14,11 @@ MonoBehaviour:
   creatureName: Doggo
   attackDamage: 15
   defenseAmount: 10
+  creatureHealth: 100
   creatureBond: 100
   creatureRangeMin: 10
   creatureRangeMax: 35
   creatureAttackRange: 10
+  triggerRange: 0
   creatureSpeed: 8
   creatureBehavior: 0
