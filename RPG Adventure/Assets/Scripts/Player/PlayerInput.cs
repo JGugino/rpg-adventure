@@ -3,10 +3,6 @@
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour {
 
-    public Quest quest;
-
-    public Transform target;
-
     private PlayerController playerController;
 
     private void Start()
@@ -16,15 +12,6 @@ public class PlayerInput : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F4))
-        {
-            QuestController.instance.addQuest(quest, target);
-        }else if (Input.GetKeyDown(KeyCode.F5))
-        {
-            QuestController.instance.removeQuest(quest);
-        }
-
-
         if (!GameController.instance.isPaused)
         {
             if (Input.GetButtonDown("Move/Select") && (!GameController.instance.isPaused) && (!playerController.getControllingCreature()))

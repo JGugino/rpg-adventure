@@ -52,7 +52,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1029319728743428}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 260.78625, y: 1.49, z: 244.3}
+  m_LocalPosition: {x: 260.78625, y: 1.49, z: 253.65}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4978787836066650}
@@ -144,5 +144,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4d446e8e8db674f41bd81532f4099a6b, type: 2}
   - {fileID: 11400000, guid: 410ec8f0f35e6e0479a67da4edd633bf, type: 2}
   - {fileID: 11400000, guid: c0c45776f3072074cbcd0ed00f50b054, type: 2}
+  activeDistance: 30
   spawnDelay: 5
   currentDelay: 0

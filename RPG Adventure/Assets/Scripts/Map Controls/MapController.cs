@@ -6,6 +6,8 @@ public class MapController : MonoBehaviour {
 
     public Transform target;
 
+    public int minZoom = 5, maxZoom = 150;
+
     public float zoomSpeed;
 
     private void Update()
@@ -14,21 +16,21 @@ public class MapController : MonoBehaviour {
         {
             float direction = Input.GetAxis("Mouse ScrollWheel");
 
-            if (GUIController.instance.mapCamera.orthographicSize >= 5 && GUIController.instance.mapCamera.orthographicSize <= 250)
+            if (GUIController.instance.mapCamera.orthographicSize >= minZoom && GUIController.instance.mapCamera.orthographicSize <= maxZoom)
             {
                 float size = Mathf.Round(direction * zoomSpeed);
 
                 GUIController.instance.mapCamera.orthographicSize -= size;
             }
 
-            if (GUIController.instance.mapCamera.orthographicSize < 5)
+            if (GUIController.instance.mapCamera.orthographicSize < minZoom)
             {
-                GUIController.instance.mapCamera.orthographicSize = 5;
+                GUIController.instance.mapCamera.orthographicSize = minZoom;
             }
 
-            if (GUIController.instance.mapCamera.orthographicSize > 250)
+            if (GUIController.instance.mapCamera.orthographicSize > maxZoom)
             {
-                GUIController.instance.mapCamera.orthographicSize = 250;
+                GUIController.instance.mapCamera.orthographicSize = maxZoom;
             }
         }
 

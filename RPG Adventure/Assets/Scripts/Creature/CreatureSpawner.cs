@@ -8,6 +8,9 @@ public class CreatureSpawner : MonoBehaviour {
 
     public Creature[] creatureTypes = new Creature[4];
 
+    private GameObject createdCreature;
+
+    [SerializeField, Tooltip("How close you have to get for it to start spawning")]
     private float activeDistance = 50f;
 
     private int minDistance = -30, maxDistance = 30;
@@ -38,62 +41,83 @@ public class CreatureSpawner : MonoBehaviour {
         {
             if (GameController.instance.totalActiveCreatures < GameController.instance.maxCreatureCap)
             {
-                GameObject createdCreature = Instantiate(creaturePrefab, new Vector3((transform.position.x + Random.Range(minDistance, maxDistance)), (transform.position.y + 1), (transform.position.z + Random.Range(minDistance, maxDistance))), Quaternion.identity);
-
-                CreatureAI cAI = createdCreature.GetComponent<CreatureAI>();
+                createdCreature = Instantiate(creaturePrefab, new Vector3((transform.position.x + Random.Range(minDistance, maxDistance)), (transform.position.y + 1), (transform.position.z + Random.Range(minDistance, maxDistance))), Quaternion.identity);
 
                 if (Random.value <= 0.2)
                 {
-                    cAI.creature = creatureTypes[0];
-
-                    Debug.Log("Creature Type: " + creatureTypes[0].creatureBehavior);
-
-                    GameController.instance.totalActiveCreatures++;
-
-                    currentDelay = 0;
-
-                    return;
+                    selectCreatureType(0);
                 }
 
                 if (Random.value > 0.2 && Random.value <= 0.5)
                 {
-                    cAI.creature = creatureTypes[1];
-
-                    Debug.Log("Creature Type: " + creatureTypes[1].creatureBehavior);
-
-                    GameController.instance.totalActiveCreatures++;
-
-                    currentDelay = 0;
-
-                    return;
+                    selectCreatureType(1);
                 }
 
                 if (Random.value > 0.5 && Random.value <= 0.7)
                 {
-                    cAI.creature = creatureTypes[2];
-
-                    Debug.Log("Creature Type: " + creatureTypes[2].creatureBehavior);
-
-                    GameController.instance.totalActiveCreatures++;
-
-                    currentDelay = 0;
-
-                    return;
+                    selectCreatureType(2);
                 }
 
                 if (Random.value > 0.7)
                 {
-                    cAI.creature = creatureTypes[3];
-
-                    Debug.Log("Creature Type: " + creatureTypes[3].creatureBehavior);
-
-                    GameController.instance.totalActiveCreatures++;
-
-                    currentDelay = 0;
-
-                    return;
+                    selectCreatureType(3);
                 }
             }
         }
+    }
+
+    public void selectCreatureType(int _type)
+    {
+        CreatureAI cAI = createdCreature.GetComponent<CreatureAI>();
+
+        if (cAI.creature.creatureBehavior == CreatureBehavior.Passive)
+        {
+            if (GameController.instance.totalPassiveCreatures < GameController.instance.maxPassiveCreatures)
+            {
+                cAI.creature = creatureTypes[_type];
+
+                currentDelay = 0;
+
+                GameController.instance.totalPassiveCreatures++;
+
+                GameController.instance.totalActiveCreatures++;
+
+                return;
+            }
+        }
+
+        if (cAI.creature.creatureBehavior == CreatureBehavior.Neutral)
+        {
+            if (GameController.instance.totalNeutralCreatures < GameController.instance.maxNeutralCreatures)
+            {
+                cAI.creature = creatureTypes[_type];
+
+                currentDelay = 0;
+
+                GameController.instance.totalNeutralCreatures++;
+
+                GameController.instance.totalActiveCreatures++;
+
+                return;
+            }
+        }
+
+        if (cAI.creature.creatureBehavior == CreatureBehavior.Aggressive)
+        {
+            if (GameController.instance.totalAggressiveCreatures < GameController.instance.maxAggressiveCreatures)
+            {
+                cAI.creature = creatureTypes[_type];
+
+                currentDelay = 0;
+
+                GameController.instance.totalAggressiveCreatures++;
+
+                GameController.instance.totalActiveCreatures++;
+
+                return;
+            }
+        }
+
+        return;
     }
 }

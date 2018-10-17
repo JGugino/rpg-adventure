@@ -159,8 +159,6 @@ public class PlayerController : MonoBehaviour {
         {
             Item item = collision.collider.GetComponent<ItemController>().item;
 
-            int range = item.range;
-
             ItemType _type = item.type;
 
             if (_type == ItemType.Weapon)

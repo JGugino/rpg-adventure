@@ -1,17 +1,12 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(CreatureController))]
 [RequireComponent(typeof(CreatureAI))]
 public class CreatureMotor : MonoBehaviour {
-
-    private CreatureController creatureController;
 
     private CreatureAI creatureAI;
 
     void Start () {
-        creatureController = GetComponent<CreatureController>();
 
         creatureAI = GetComponent<CreatureAI>();
     }

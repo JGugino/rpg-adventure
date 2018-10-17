@@ -209,8 +209,34 @@ public class CreatureController : MonoBehaviour {
         {
             isDead = true;
             gameObject.SetActive(false);
-            GameController.instance.totalActiveCreatures--;
-            return;
+
+            if (creatureAI.creature.creatureBehavior == CreatureBehavior.Passive)
+            {
+                GameController.instance.totalPassiveCreatures--;
+
+                GameController.instance.totalActiveCreatures--;
+
+                return;
+            }
+
+
+            if (creatureAI.creature.creatureBehavior == CreatureBehavior.Neutral)
+            {
+                GameController.instance.totalNeutralCreatures--;
+
+                GameController.instance.totalActiveCreatures--;
+
+                return;
+            }
+
+            if (creatureAI.creature.creatureBehavior == CreatureBehavior.Aggressive)
+            {
+                GameController.instance.totalAggressiveCreatures--;
+
+                GameController.instance.totalActiveCreatures--;
+
+                return;
+            }
         }
     }
 }
