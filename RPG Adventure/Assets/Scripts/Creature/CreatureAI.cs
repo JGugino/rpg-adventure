@@ -154,6 +154,8 @@ public class CreatureAI : MonoBehaviour {
             creatureAgent.SetDestination(newPosition);
 
             yield return new WaitForSeconds(waitTime);
+
+            posPicked = false;
         }
     }
 
