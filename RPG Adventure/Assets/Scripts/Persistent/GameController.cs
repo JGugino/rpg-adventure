@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.IO;
 
 public class GameController : MonoBehaviour {
 
@@ -23,8 +24,14 @@ public class GameController : MonoBehaviour {
 
     public string gameVersion = "0.0.2 alpha";
 
+    private string playerName = "Gugino";
+
+    private string saveLocation;
+
 	void Awake () {
         instance = this;
+
+        saveLocation = Path.Combine(Application.persistentDataPath, Path.Combine("saves", playerName));
 	}
 
 }
