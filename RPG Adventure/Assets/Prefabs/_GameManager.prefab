@@ -1,0 +1,239 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1926467136903698}
+  m_IsPrefabAsset: 1
+--- !u!1 &1624703532264564
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4220400498742106}
+  - component: {fileID: 114318530661212700}
+  - component: {fileID: 114465613180440644}
+  m_Layer: 0
+  m_Name: _DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1926467136903698
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4585574498649070}
+  - component: {fileID: 114993474813364172}
+  - component: {fileID: 114635838617642488}
+  - component: {fileID: 114505820998437490}
+  - component: {fileID: 114343384478751708}
+  - component: {fileID: 114607531217860206}
+  - component: {fileID: 114909497519008614}
+  m_Layer: 0
+  m_Name: _GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4220400498742106
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1624703532264564}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4585574498649070}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4585574498649070
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1926467136903698}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4220400498742106}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114318530661212700
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1624703532264564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f4ec40cc67c60c4a945b8feb6498836, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114343384478751708
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1926467136903698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1e71d1f0c294741a0fa54ed9e9bf58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activeQuest: {fileID: 0}
+  playersQuests: []
+  completedQuests: []
+  targetLocation: {fileID: 0}
+--- !u!114 &114465613180440644
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1624703532264564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92ecea1968248c64789fe417fd144bf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settingSaveLocation: 
+  playerDataSaveLocation: 
+--- !u!114 &114505820998437490
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1926467136903698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 566b52ed9c8475d4e8889fff7aea1eb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryItems: []
+  equippedCreature: {fileID: 0}
+--- !u!114 &114607531217860206
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1926467136903698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfbe3f0555fdeab44894939b171cef89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minimapOpen: 1
+  mapOpen: 0
+  questsOpen: 0
+  menuUI: {fileID: 0}
+  loadUI: {fileID: 0}
+  nameUI: {fileID: 0}
+  nameInput: {fileID: 0}
+  playButton: {fileID: 0}
+  settingsButton: {fileID: 0}
+  exitButton: {fileID: 0}
+  saveOneButton: {fileID: 0}
+  saveTwoButton: {fileID: 0}
+  saveThreeButton: {fileID: 0}
+  backButton: {fileID: 0}
+  createButton: {fileID: 0}
+  versionText: {fileID: 0}
+  weaponSlotPrefab: {fileID: 1070202907688780, guid: 0abee6fac8481aa45886a1a9c0a7fc15,
+    type: 2}
+  defenseSlotPrefab: {fileID: 1524684888746190, guid: 5b4787438d2c68e4c84d5931a8588c54,
+    type: 2}
+  keySlotPrefab: {fileID: 1341725289542524, guid: f7f701a5cd9b8b64c92f071fbbf4718d,
+    type: 2}
+  weaponSlots: {fileID: 0}
+  defenseSlots: {fileID: 0}
+  keySlots: {fileID: 0}
+  inventoryObject: {fileID: 0}
+  headSlot: {fileID: 0}
+  chestSlot: {fileID: 0}
+  legsSlot: {fileID: 0}
+  weaponSlot: {fileID: 0}
+  weaponParent: {fileID: 0}
+  defenseParent: {fileID: 0}
+  keyParent: {fileID: 0}
+  weaponButton: {fileID: 0}
+  defenseButton: {fileID: 0}
+  keyButton: {fileID: 0}
+  weaponEquip: {fileID: 0}
+  headEquip: {fileID: 0}
+  chestEquip: {fileID: 0}
+  legsEquip: {fileID: 0}
+  mapObject: {fileID: 0}
+  minimapObject: {fileID: 0}
+  mapCamera: {fileID: 0}
+  minimapCamera: {fileID: 0}
+  questPrefab: {fileID: 1090887314672168, guid: a9d83d7f90740ee459dc1a1d10cbe873,
+    type: 2}
+  questParent: {fileID: 0}
+  questsObject: {fileID: 0}
+  activeQuestName: {fileID: 0}
+  activeQuestObjective: {fileID: 0}
+--- !u!114 &114635838617642488
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1926467136903698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8ce2a515a9e1c4baf5c4706e55e81a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCreatureCap: 50
+  maxPassiveCreatures: 20
+  maxNeutralCreatures: 20
+  maxAggressiveCreatures: 20
+  totalActiveCreatures: 0
+  totalPassiveCreatures: 0
+  totalNeutralCreatures: 0
+  totalAggressiveCreatures: 0
+  isPaused: 0
+  isGameStarted: 0
+  gameVersion: 0.0.4
+  numberOfSaves: 0
+--- !u!114 &114909497519008614
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1926467136903698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e556463334ff9b94f95a47f23db2d737, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sun: {fileID: 0}
+  secondsInFullDay: 1200
+  currentTimeOfDay: 0.5
+--- !u!114 &114993474813364172
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1926467136903698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97ce471cb0fb98e4e9a1a57565e4f3ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

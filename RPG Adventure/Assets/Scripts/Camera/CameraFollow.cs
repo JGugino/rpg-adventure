@@ -26,7 +26,6 @@ public class CameraFollow : MonoBehaviour {
     {
         //Gets camera transform position
         cameraTransform = GetComponent<Transform>();
-
         target = PlayerManager.instance.playerObject.transform;
     }
 

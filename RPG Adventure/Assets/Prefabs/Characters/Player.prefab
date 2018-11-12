@@ -302,8 +302,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 229acaa2ada6f974fbe62e9aba325e20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quest: {fileID: 11400000, guid: f35fc9af738466045b4131779d580032, type: 2}
-  target: {fileID: 0}
 --- !u!114 &114079992112880852
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -315,6 +313,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52cb924a2c67bf74db85db3267fd438b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthText: {fileID: 0}
 --- !u!114 &114301501555823686
 MonoBehaviour:
   m_ObjectHideFlags: 1

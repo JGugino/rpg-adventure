@@ -54,8 +54,8 @@ public class InventoryController : MonoBehaviour {
 
     private void Start()
     {
-        GUIController.instance.findInventoryUI();
-        GUIController.instance.setButtonListeners();
+        //GUIController.instance.findInventoryUI();
+        //GUIController.instance.setButtonListeners();
     }
 
     #region Add item to inventory list
@@ -457,6 +457,33 @@ public class InventoryController : MonoBehaviour {
     public GameObject getEquippedCreature()
     {
         return equippedCreature;
+    }
+    #endregion
+
+    #region Setters
+    public void setEquippedHead(InventoryItem _head)
+    {
+        equippedHead = _head;
+    }
+
+    public void setEquippedChest(InventoryItem _chest)
+    {
+        equippedChest = _chest;
+    }
+
+    public void setEquippedLegs(InventoryItem _legs)
+    {
+        equippedLegs = _legs;
+    }
+
+    public void setEquippedWeapon(InventoryItem _weapon)
+    {
+        equippedWeapon = _weapon;
+    }
+
+    public void setEquippedCreature(GameObject _creature)
+    {
+        equippedCreature = _creature;
     }
     #endregion
 }

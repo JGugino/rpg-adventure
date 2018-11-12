@@ -8,6 +8,15 @@ public class GUIController : MonoBehaviour {
 
     public bool minimapOpen = true, mapOpen = false, questsOpen = false;
 
+    #region Menu Variables
+    public GameObject menuUI, loadUI, nameUI;
+
+    public TMP_InputField nameInput;
+
+    public Button playButton, settingsButton, exitButton, saveOneButton, saveTwoButton, saveThreeButton, backButton, createButton;
+    public TextMeshProUGUI versionText;
+    #endregion
+
     #region Inventory Variables
     public GameObject weaponSlotPrefab, defenseSlotPrefab, keySlotPrefab;
 
@@ -50,7 +59,45 @@ public class GUIController : MonoBehaviour {
         instance = this;
     }
 
-    public void Start()
+    public void findMenuUI()
+    {
+        menuUI = GameObject.Find("Menu UI");
+        loadUI = GameObject.Find("Load UI");
+        nameUI = GameObject.Find("Name UI");
+
+        playButton = GameObject.Find("Play Button").GetComponent<Button>();
+        settingsButton = GameObject.Find("Settings Button").GetComponent<Button>();
+        exitButton = GameObject.Find("Exit Button").GetComponent<Button>();
+
+        saveOneButton = GameObject.Find("Save One Button").GetComponent<Button>();
+        saveTwoButton = GameObject.Find("Save Two Button").GetComponent<Button>();
+        saveThreeButton = GameObject.Find("Save Three Button").GetComponent<Button>();
+
+        backButton = GameObject.Find("Back Button").GetComponent<Button>();
+
+        createButton = GameObject.Find("Create Button").GetComponent<Button>();
+
+        nameInput = GameObject.Find("Name Input").GetComponent<TMP_InputField>();
+
+        versionText = GameObject.Find("Version Text").GetComponent<TextMeshProUGUI>();
+
+        setMenuButtonListeners();
+
+        setLoadButtonListeners();
+
+        updateVersionText();
+
+        toggleLoadUI(false);
+        toggleNameUI(false);
+    }
+
+    public void updateVersionText()
+    {
+        versionText.text = "VERSION " + GameController.instance.gameVersion;
+    }
+
+    #region Find Game UI
+    public void findQuestUI()
     {
         questParent = GameObject.Find("Quests Parent");
 
@@ -67,7 +114,6 @@ public class GUIController : MonoBehaviour {
 
     public void findInventoryUI()
     {
-
         #region Finding Inventory Objects
         //Finds Inventory Object
         inventoryObject = GameObject.Find("Player Inventory");
@@ -104,6 +150,8 @@ public class GUIController : MonoBehaviour {
         defenseButton.onClick.AddListener(delegate { openDefenseSlots(); });
         keyButton.onClick.AddListener(delegate { openKeySlots(); });
 
+        setEquipButtonListeners();
+
         defaultDisable();
         #endregion
 
@@ -117,7 +165,29 @@ public class GUIController : MonoBehaviour {
 
         toggleMap(mapOpen);
     }
+    #endregion
 
+    #region Toggle methods for menu UI
+    public void toggleMenuUI(bool _open)
+    {
+        menuUI.SetActive(_open);
+        loadUI.SetActive(!_open);
+    }
+
+    public void toggleLoadUI(bool _open)
+    {
+        loadUI.SetActive(_open);
+        menuUI.SetActive(!_open);
+    }
+
+    public void toggleNameUI(bool _open)
+    {
+        nameUI.SetActive(_open);
+    }
+
+    #endregion
+
+    #region Toggle methods for game UI
     public void toggleQuests(bool _open)
     {
         if (_open)
@@ -181,13 +251,31 @@ public class GUIController : MonoBehaviour {
     //Sets the default view of the inventory
     private void defaultDisable()
     {
-
         openWeaponSlots();
 
         toggleInventory(false);
     }
+    #endregion
 
-    public void setButtonListeners()
+    #region Assign Button Listeners
+    public void setMenuButtonListeners()
+    {
+        playButton.onClick.AddListener(delegate { toggleLoadUI(true); });
+        exitButton.onClick.AddListener(delegate { GameController.instance.exitGame(); });
+    }
+
+    public void setLoadButtonListeners()
+    {
+        saveOneButton.onClick.AddListener(delegate { toggleNameUI(true); });
+        saveTwoButton.onClick.AddListener(delegate { toggleNameUI(true); });
+        saveThreeButton.onClick.AddListener(delegate { toggleNameUI(true); });
+
+        backButton.onClick.AddListener(delegate { toggleMenuUI(true); });
+
+        createButton.onClick.AddListener(delegate { GameController.instance.startGame(); });
+    }
+
+    public void setEquipButtonListeners()
     {
         headEquip.onClick.AddListener( delegate { InventoryController.instance.unequipItem(ItemType.Head); });
         chestEquip.onClick.AddListener(delegate { InventoryController.instance.unequipItem(ItemType.Chest); });
@@ -195,6 +283,7 @@ public class GUIController : MonoBehaviour {
 
         weaponEquip.onClick.AddListener(delegate { InventoryController.instance.unequipItem(ItemType.Weapon); });
     }
+    #endregion
 
     #region Slot Controls
 

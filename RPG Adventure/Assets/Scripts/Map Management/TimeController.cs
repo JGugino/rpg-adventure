@@ -17,20 +17,27 @@ public class TimeController : MonoBehaviour {
 
     private float sunInitialIntensity;
 
-    private void Start()
-    {
-        sunInitialIntensity = sun.intensity;
-    }
-
     private void Update()
     {
-        updateSun();
-
-        currentTimeOfDay += (Time.deltaTime / secondsInFullDay) * timeMultiplier;
-
-        if (currentTimeOfDay >= 1)
+        if (GameController.instance.isGameStarted)
         {
-            currentTimeOfDay = 0;
+            updateSun();
+
+            currentTimeOfDay += (Time.deltaTime / secondsInFullDay) * timeMultiplier;
+
+            if (currentTimeOfDay >= 1)
+            {
+                currentTimeOfDay = 0;
+            }
+        }
+    }
+
+    public void findSun()
+    {
+        if (sun == null)
+        {
+            sun = GameObject.Find("Sun").GetComponent<Light>();
+            sunInitialIntensity = sun.intensity;
         }
     }
 

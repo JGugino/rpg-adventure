@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
-        healthText.text = "Health: " + playerHealth;
+        //healthText.text = "Health: " + playerHealth;
 	}
 
     #region Player Movement
@@ -151,6 +151,16 @@ public class PlayerController : MonoBehaviour {
     public void setControllingCreature(bool _controlling)
     {
         controllingCreature = _controlling;
+    }
+
+    public void setPlayerHealth(int _health)
+    {
+        playerHealth = _health;
+    }
+
+    public int getPlayerHealth()
+    {
+        return playerHealth;
     }
 
     private void OnCollisionEnter(Collision collision)
