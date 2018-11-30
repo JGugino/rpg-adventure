@@ -1,0 +1,49 @@
+{
+    "newGame": false,
+    "playerName": "JOSH",
+    "playerHealth": 100,
+    "inventoryItems": [],
+    "equippedHead": {
+        "name": "",
+        "icon": {
+            "instanceID": 0
+        },
+        "type": 0,
+        "stackable": false,
+        "damage": 0,
+        "defense": 0
+    },
+    "equippedChest": {
+        "name": "",
+        "icon": {
+            "instanceID": 0
+        },
+        "type": 0,
+        "stackable": false,
+        "damage": 0,
+        "defense": 0
+    },
+    "equippedLegs": {
+        "name": "",
+        "icon": {
+            "instanceID": 0
+        },
+        "type": 0,
+        "stackable": false,
+        "damage": 0,
+        "defense": 0
+    },
+    "equippedWeapon": {
+        "name": "",
+        "icon": {
+            "instanceID": 0
+        },
+        "type": 0,
+        "stackable": false,
+        "damage": 0,
+        "defense": 0
+    },
+    "equippedCreature": {
+        "instanceID": 0
+    }
+}

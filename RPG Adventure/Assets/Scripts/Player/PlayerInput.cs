@@ -53,12 +53,19 @@ public class PlayerInput : MonoBehaviour {
 
         if (Input.GetButtonDown("Inventory"))
         {
-            toggleInventory();
+            toggleTabMenu();
         }
 
-        if (Input.GetButtonDown("Quests"))
+        if (Input.GetButtonDown("Pause"))
         {
-            toggleQuests();
+            if (GUIController.instance.pauseUI.activeSelf)
+            {
+                GUIControls.instance.togglePauseMenu(false);
+            }
+            else if (!GUIController.instance.pauseUI.activeSelf)
+            {
+                GUIControls.instance.togglePauseMenu(true);
+            }
         }
     }
 
@@ -66,50 +73,37 @@ public class PlayerInput : MonoBehaviour {
     {
         if (!GUIController.instance.mapOpen)
         {
-            GUIController.instance.toggleMap(true);
-            GUIController.instance.toggleMinimap(false);
+            GUIControls.instance.toggleMap(true);
             GameController.instance.isPaused = true;
         }
         else if (GUIController.instance.mapOpen)
         {
-            GUIController.instance.toggleMap(false);
-            GUIController.instance.toggleMinimap(true);
+            GUIControls.instance.toggleMap(false);
             GameController.instance.isPaused = false;
         }
     }
 
-    public void toggleInventory()
+    public void toggleTabMenu()
     {
-        if (GUIController.instance.inventoryObject.activeSelf)
+        if (GUIController.instance.tabMenuObject.activeSelf)
         {
-            GUIController.instance.toggleMinimap(true);
-            GUIController.instance.toggleInventory(false);
+            GUIControls.instance.toggleTabMenu(false);
             GameController.instance.isPaused = false;
         }
-        else if (!GUIController.instance.inventoryObject.activeSelf)
+        else if (!GUIController.instance.tabMenuObject.activeSelf)
         {
             if (GUIController.instance.mapOpen)
             {
-                GUIController.instance.toggleMap(false);
+                GUIControls.instance.toggleMap(false);
             }
-            GUIController.instance.toggleMinimap(false);
-            GUIController.instance.toggleInventory(true);
-            InventoryController.instance.createPrefab();
-            GameController.instance.isPaused = true;
-        }
-    }
 
-    public void toggleQuests()
-    {
-        if (GUIController.instance.questsObject.activeSelf)
-        {
-            GUIController.instance.toggleQuests(false);
-            GameController.instance.isPaused = false;
-        }
-        else if (!GUIController.instance.questsObject.activeSelf)
-        {
-            GUIController.instance.toggleQuests(true);
-            GameController.instance.isPaused = false;
+            GUIControls.instance.toggleTabMenu(true);
+            GUIControls.instance.toggleInventory(true);
+            GUIControls.instance.updatePlayerName();
+            GUIControls.instance.updateHeaderStats();
+            GUIControls.instance.updatePlayerStats();
+            InventoryControls.instance.createPrefab();
+            GameController.instance.isPaused = true;
         }
     }
 }

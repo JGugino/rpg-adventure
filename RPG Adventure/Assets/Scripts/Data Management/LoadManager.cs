@@ -5,11 +5,18 @@ using System.IO;
 
 public class LoadManager : MonoBehaviour {
 
-    private PlayerData playerData;
+    public static LoadManager instance;
+
+    public PlayerData playerData;
 
     private GameSettingsData settingsData;
 
-	void Start () {
+    private void Awake()
+    {
+        instance = this;
+    }
+
+    void Start () {
         settingsData = new GameSettingsData();
 
         playerData = new PlayerData();
@@ -43,12 +50,43 @@ public class LoadManager : MonoBehaviour {
 
         PlayerManager.instance.playerObject.GetComponent<PlayerController>().setPlayerHealth(playerData.playerHealth);
 
-        InventoryController.instance.setEquippedHead(playerData.equippedHead);
-        InventoryController.instance.setEquippedChest(playerData.equippedChest);
-        InventoryController.instance.setEquippedLegs(playerData.equippedLegs);
+        if (playerData.inventoryItems != null)
+        {
+            foreach (Item _item in playerData.inventoryItems)
+            {
+                Debug.Log(_item);
 
-        InventoryController.instance.setEquippedWeapon(playerData.equippedWeapon);
+                if (_item != null)
+                {
+                    InventoryControls.instance.addItem(_item);
+                    return;
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+        if (playerData.equippedHead != null)
+        {
+            InventoryController.instance.setEquippedHead(playerData.equippedHead);
+        }
+        if (playerData.equippedChest != null)
+        {
+            InventoryController.instance.setEquippedChest(playerData.equippedChest);
+        }
+        if (playerData.equippedLegs != null)
+        {
+            InventoryController.instance.setEquippedLegs(playerData.equippedLegs);
+        }
+
+        if (playerData.equippedWeapon != null)
+        {
+            InventoryController.instance.setEquippedWeapon(playerData.equippedWeapon);
+        }
 
         InventoryController.instance.setEquippedCreature(playerData.equippedCreature);
+
+        InventoryControls.instance.reEquipItems();
     }
 }

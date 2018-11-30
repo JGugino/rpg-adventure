@@ -24,30 +24,30 @@ public class CameraFollow : MonoBehaviour {
 
     private void Start()
     {
-        //Gets camera transform position
         cameraTransform = GetComponent<Transform>();
-        target = PlayerManager.instance.playerObject.transform;
     }
 
     private void LateUpdate () {
-
-        target = PlayerManager.instance.playerObject.transform;
-
-        if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+        if (target != null)
         {
-            //Follows specified target
-            cameraTransform.position = target.position + cameraOffset * currentZoom;
+            target = PlayerManager.instance.playerObject.transform;
 
-            //Makes camera point towards targets position
-            cameraTransform.LookAt(target.position + Vector3.up * pitch);
-        }
-        else if (PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
-        {
-            //Follows Creature
-            cameraTransform.position = InventoryController.instance.equippedCreature.transform.position + cameraOffset * currentZoom;
+            if (!PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+            {
+                //Follows specified target
+                cameraTransform.position = target.position + cameraOffset * currentZoom;
 
-            //Makes camera point towards creatures position
-            cameraTransform.LookAt(InventoryController.instance.equippedCreature.transform.position + Vector3.up * pitch);
+                //Makes camera point towards targets position
+                cameraTransform.LookAt(target.position + Vector3.up * pitch);
+            }
+            else if (PlayerManager.instance.playerObject.GetComponent<PlayerController>().getControllingCreature())
+            {
+                //Follows Creature
+                cameraTransform.position = InventoryController.instance.equippedCreature.transform.position + cameraOffset * currentZoom;
+
+                //Makes camera point towards creatures position
+                cameraTransform.LookAt(InventoryController.instance.equippedCreature.transform.position + Vector3.up * pitch);
+            }
         }
     }
 }

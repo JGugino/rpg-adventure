@@ -10,16 +10,22 @@ public class ItemController : MonoBehaviour {
 
     private void Start()
     {
-        range = item.range;
+        if (item != null)
+        {
+            range = item.range;
+        }
     }
 
     private void Update()
     {
-        float distance = Vector3.Distance(PlayerManager.instance.playerObject.transform.position, transform.position);
-
-        if (distance <= range)
+        if (PlayerManager.instance.playerObject != null)
         {
-            transform.position = Vector3.Lerp(transform.position, PlayerManager.instance.playerObject.transform.position, Time.deltaTime);
+            float distance = Vector3.Distance(PlayerManager.instance.playerObject.transform.position, transform.position);
+
+            if (distance <= range)
+            {
+                transform.position = Vector3.Lerp(transform.position, PlayerManager.instance.playerObject.transform.position, Time.deltaTime);
+            }
         }
     }
 }

@@ -11,7 +11,11 @@ public class PlayerController : MonoBehaviour {
 
     private int playerHealth = 100, playerMaxHealth = 100;
 
+    private int playerMoney = 0;
+
     private int baseDamage = 3;
+
+    private int defenceAmount = 0;
 
     private float attackRange = 20, moveRange = 80;
 
@@ -163,30 +167,28 @@ public class PlayerController : MonoBehaviour {
         return playerHealth;
     }
 
+    public int getPlayerMoney()
+    {
+        return playerMoney;
+    }
+
+    public int getPlayerAttack()
+    {
+        return baseDamage;
+    }
+
+    public int getPlayerDefence()
+    {
+        return defenceAmount;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.GetComponent<ItemController>())
         {
             Item item = collision.collider.GetComponent<ItemController>().item;
 
-            ItemType _type = item.type;
-
-            if (_type == ItemType.Weapon)
-            {
-                Weapon _weapon = (Weapon)item;
-
-                InventoryController.instance.addItem(item, _weapon);
-            }
-            else if ((_type == ItemType.Head) || (_type == ItemType.Chest) || (_type == ItemType.Legs))
-            {
-                Armor _armor = (Armor)item;
-
-                InventoryController.instance.addItem(item, null, _armor);
-            }
-            else
-            {
-                InventoryController.instance.addItem(item);
-            }
+            InventoryControls.instance.addItem(item);
 
             collision.collider.gameObject.SetActive(false);
         }

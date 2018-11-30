@@ -4,13 +4,14 @@ using UnityEngine;
 
 [System.Serializable]
 public class PlayerData{
+
     public string playerName;
 
     public int playerHealth;
 
-    public List<InventoryController.InventoryItem> inventoryItems;
+    public List<Item> inventoryItems;
 
-    public InventoryController.InventoryItem equippedHead, equippedChest, equippedLegs, equippedWeapon;
+    public Item equippedHead, equippedChest, equippedLegs, equippedWeapon;
 
     public GameObject equippedCreature;
 }

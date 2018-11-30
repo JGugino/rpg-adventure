@@ -25,9 +25,9 @@ public class SaveManager : MonoBehaviour {
 
         gameSettingsData = new GameSettingsData();
 
-        settingSaveLocation = Application.persistentDataPath + "/" + "Settings";
+        settingSaveLocation = Application.persistentDataPath + "/" + "settings";
 
-        playerDataSaveLocation = GameController.instance.getSaveLocation() + "/" + "Player_Data";
+        playerDataSaveLocation = GameController.instance.getSaveLocation() + "player_data";
 
         if (!Directory.Exists(settingSaveLocation))
         {
@@ -45,7 +45,7 @@ public class SaveManager : MonoBehaviour {
         getPlayerData();
 
         string _playerData = JsonUtility.ToJson(playerData, true);
-        File.WriteAllText(playerDataSaveLocation + "/" + "player_data.txt", _playerData);
+        File.WriteAllText(playerDataSaveLocation +"/"+ "player_data.json", _playerData);
     }
 
     public void saveSettingsData()
@@ -53,7 +53,7 @@ public class SaveManager : MonoBehaviour {
         getSettingsData();
 
         string saveData = JsonUtility.ToJson(gameSettingsData,true);
-        File.WriteAllText(settingSaveLocation + "/" + "settings.txt", saveData);
+        File.WriteAllText(settingSaveLocation + "/" + "settings.json", saveData);
     }
 
     public void getSettingsData()

@@ -13,6 +13,8 @@ public class Item : ScriptableObject {
 
     public SpecialAbility specialAbility;
 
+    public int damage, defense;
+
     public bool stackable;
 }
 public enum ItemType{

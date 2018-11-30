@@ -36,46 +36,110 @@ public class GameController : MonoBehaviour {
 	void Awake () {
         instance = this;
 
-        saveLocation = Application.persistentDataPath + "/" + "saves" + "/" + playerName;
+        saveLocation = Application.persistentDataPath + "/" + "saves" + "/";
 
-        GUIController.instance.findMenuUI();
 	}
 
     private void Start()
     {
-        SaveManager.instance.saveSettingsData();
-    }
-
-    public void startGame()
-    {
-        if (GUIController.instance.nameInput.text == "")
-        {
-            GUIController.instance.nameInput.text = "Bob";
-            playerName = GUIController.instance.nameInput.text;
-        }
-        else
-        {
-            playerName = GUIController.instance.nameInput.text;
-        }
-
-        saveLocation = Application.persistentDataPath + "/" + "saves" + "/" + playerName;
-
-        GUIController.instance.toggleNameUI(false);
-
-        SceneManager.LoadScene(1);
-
         StartCoroutine(LateStart());
     }
 
     public IEnumerator LateStart()
     {
+        yield return new WaitForSeconds(1f);
+
+
+        if (!File.Exists(SaveManager.instance.settingSaveLocation + "/" + "settings.json"))
+        {
+            SaveManager.instance.saveSettingsData();
+        }
+
+        if (!File.Exists(SaveManager.instance.playerDataSaveLocation + "/player_data.json"))
+        {
+            GUIControls.instance.toggleContinueButton(false);
+        }
+        else
+        {
+            GUIControls.instance.toggleContinueButton(true);
+        }
+    }
+
+    public void newGame()
+    {
+        if (!File.Exists(SaveManager.instance.playerDataSaveLocation + "/player_data.json"))
+        {
+            if (GUIController.instance.nameInput.text != "")
+            {
+                playerName = GUIController.instance.nameInput.text.ToUpper();
+
+                StartCoroutine(NewGame());
+            }
+            else if (GUIController.instance.nameInput.text == "")
+            {
+                Debug.LogError("ERROR: YOU MUST ENTER A NAME!");
+            }
+        }
+        else
+        {
+            if (GUIController.instance.nameInput.text != "")
+            {
+                playerName = GUIController.instance.nameInput.text.ToUpper();
+
+                GUIControls.instance.toggleOverwriteUI(true);
+
+            }
+            else if (GUIController.instance.nameInput.text == "")
+            {
+                Debug.LogError("ERROR: YOU MUST ENTER A NAME!");
+            }
+        }
+    }
+
+    public void continueGame() {
+        StartCoroutine(ContinueGame());
+    }
+
+    public IEnumerator NewGame()
+    {
+        SceneManager.LoadScene(1);
+
         yield return new WaitForSeconds(0.001f);
 
-        GUIController.instance.findInventoryUI();
+        PlayerManager.instance.spawnPlayer();
 
-        GUIController.instance.findQuestUI();
+        GUIController.instance.findGameUI();
 
         SaveManager.instance.savePlayerData();
+    }
+
+    public IEnumerator ContinueGame()
+    {
+
+       SceneManager.LoadScene(1);
+
+        yield return new WaitForSeconds(0.001f);
+
+        PlayerManager.instance.spawnPlayer();
+
+        GUIController.instance.findGameUI();
+
+        if (!File.Exists(SaveManager.instance.playerDataSaveLocation + "/player_data.json"))
+        {
+            SaveManager.instance.savePlayerData();
+        }
+        else
+        {
+            LoadManager.instance.loadPlayerData();
+        }
+
+    }
+
+    public void saveAndExit()
+    {
+        SaveManager.instance.savePlayerData();
+
+        SceneManager.LoadScene(0);
     }
 
     public void exitGame()

@@ -8,14 +8,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9176619bf5912e4a9737e97944461f4, type: 3}
-  m_Name: Broken Chestplate
+  m_Script: {fileID: 11500000, guid: e582983d26f36aa45b070c0fe2ba6f89, type: 3}
+  m_Name: Legs
   m_EditorClassIdentifier: 
-  itemName: Broken Chestplate
-  value: 15
+  itemName: Legs
+  value: 0
   range: 10
-  icon: {fileID: 21300000, guid: 0fce622d9d79cd148a22ca2b218cc2f7, type: 3}
-  type: 2
-  specialAbility: 2
+  icon: {fileID: 21300000, guid: 907f00692cd17c548822577df8c4f953, type: 3}
+  type: 3
+  specialAbility: 0
+  damage: 0
+  defense: 5
   stackable: 0
-  defense: 25

@@ -2,56 +2,90 @@
 using UnityEngine.UI;
 using TMPro;
 
+[RequireComponent(typeof(GUIControls))]
 public class GUIController : MonoBehaviour {
 
     public static GUIController instance;
 
-    public bool minimapOpen = true, mapOpen = false, questsOpen = false;
+    public bool mapOpen = false;
 
     #region Menu Variables
-    public GameObject menuUI, loadUI, nameUI;
+    [HideInInspector]
+    public GameObject menuUI, loadUI, overwriteUI;
 
+    [HideInInspector]
     public TMP_InputField nameInput;
 
-    public Button playButton, settingsButton, exitButton, saveOneButton, saveTwoButton, saveThreeButton, backButton, createButton;
+    [HideInInspector]
+    public Button newGameButton, continueButton, settingsButton, exitButton, backButton, createButton, yesButton, noButton;
+
+    [HideInInspector]
     public TextMeshProUGUI versionText;
+    #endregion
+
+    #region Tab Menu Variables
+
+    public GameObject tabMenuObject;
+
+    #region Menu Header Variables
+
+    [HideInInspector]
+    public TextMeshProUGUI invMenuTitle, questMenuTitle, playerHealthText, playerMoneyText;
+
+    [HideInInspector]
+    public Button invButton, questsButton;
+
     #endregion
 
     #region Inventory Variables
     public GameObject weaponSlotPrefab, defenseSlotPrefab, keySlotPrefab;
 
     [HideInInspector]
-    public GameObject weaponSlots, defenseSlots, keySlots, inventoryObject;
+    public GameObject weaponSlots, defenseSlots, creaturesSlots, keySlots, inventoryObject;
 
     [HideInInspector]
     public Image headSlot, chestSlot, legsSlot, weaponSlot;
 
     [HideInInspector]
-    public Transform weaponParent, defenseParent, keyParent;
+    public Transform weaponParent, defenseParent, creaturesParent, keyParent;
 
     [HideInInspector]
-    public Button weaponButton, defenseButton, keyButton;
+    public Button weaponButton, defenseButton, creaturesButton, keyButton;
 
     [HideInInspector]
     public Button weaponEquip, headEquip, chestEquip, legsEquip;
-    #endregion
-
-    #region Map Variables
-    [HideInInspector]
-    public GameObject mapObject, minimapObject;
 
     [HideInInspector]
-    public Camera mapCamera, minimapCamera;
+    public TextMeshProUGUI playerStatsTitle, playerAttackStat, playerDefenceStat, playerSpecialStat, playerNameText;
+
+    [HideInInspector]
+    public TextMeshProUGUI creaturesAttackStat, creaturesDefenceStat, creaturesSpecialStat;
     #endregion
 
     #region Quest Variables
     public GameObject questPrefab;
 
     [HideInInspector]
-    public GameObject questParent, questsObject;
+    public GameObject questsObject, activeQuestsParent, completedQuestsParent;
 
     [HideInInspector]
-    public TextMeshProUGUI activeQuestName, activeQuestObjective;
+    public TextMeshProUGUI activeQuestName, activeQuestObjective, selectedQuestName, selectedQuestDescription;
+    #endregion
+
+    #endregion
+
+    #region Map Variables
+    [HideInInspector]
+    public GameObject mapObject;
+
+    [HideInInspector]
+    public Camera mapCamera;
+    #endregion
+
+    #region Pause Menu Variables
+    public GameObject pauseUI;
+
+    public Button pauseSaveButton, pauseLoadButton, pauseSettingsButton, pauseMainMenuButton;
     #endregion
 
     private void Awake()
@@ -59,23 +93,30 @@ public class GUIController : MonoBehaviour {
         instance = this;
     }
 
+    public void updateVersionText()
+    {
+        versionText.text = "VERSION " + GameController.instance.gameVersion;
+    }
+
+    #region Find UI
     public void findMenuUI()
     {
         menuUI = GameObject.Find("Menu UI");
         loadUI = GameObject.Find("Load UI");
-        nameUI = GameObject.Find("Name UI");
+        overwriteUI = GameObject.Find("Overwrite UI");
 
-        playButton = GameObject.Find("Play Button").GetComponent<Button>();
+
+        newGameButton = GameObject.Find("New Game Button").GetComponent<Button>();
+        continueButton = GameObject.Find("Continue Button").GetComponent<Button>();
         settingsButton = GameObject.Find("Settings Button").GetComponent<Button>();
         exitButton = GameObject.Find("Exit Button").GetComponent<Button>();
-
-        saveOneButton = GameObject.Find("Save One Button").GetComponent<Button>();
-        saveTwoButton = GameObject.Find("Save Two Button").GetComponent<Button>();
-        saveThreeButton = GameObject.Find("Save Three Button").GetComponent<Button>();
 
         backButton = GameObject.Find("Back Button").GetComponent<Button>();
 
         createButton = GameObject.Find("Create Button").GetComponent<Button>();
+
+        yesButton = GameObject.Find("Yes Button").GetComponent<Button>();
+        noButton = GameObject.Find("No Button").GetComponent<Button>();
 
         nameInput = GameObject.Find("Name Input").GetComponent<TMP_InputField>();
 
@@ -87,45 +128,61 @@ public class GUIController : MonoBehaviour {
 
         updateVersionText();
 
-        toggleLoadUI(false);
-        toggleNameUI(false);
+        GUIControls.instance.toggleLoadUI(false);
     }
 
-    public void updateVersionText()
+    public void findGameUI()
     {
-        versionText.text = "VERSION " + GameController.instance.gameVersion;
+        findMapUI();
+
+        findPauseUI();
+        findHeaderUI();
+        findQuestUI();
+        findInventoryUI();
     }
 
-    #region Find Game UI
+    public void findHeaderUI()
+    {
+        tabMenuObject = GameObject.Find("Tab Menu");
+
+        invMenuTitle = GameObject.Find("Header Inv Text").GetComponent<TextMeshProUGUI>();
+        questMenuTitle = GameObject.Find("Header Quests Text").GetComponent<TextMeshProUGUI>();
+
+        playerHealthText = GameObject.Find("Player Header Health Text").GetComponent<TextMeshProUGUI>();
+        playerMoneyText = GameObject.Find("Player Header Money Text").GetComponent<TextMeshProUGUI>();
+
+        invButton = GameObject.Find("Header Inv Button").GetComponent<Button>();
+        questsButton = GameObject.Find("Header Quests Button").GetComponent<Button>();
+
+        setHeaderButtonListeners();
+    }
+
     public void findQuestUI()
     {
-        questParent = GameObject.Find("Quests Parent");
+        questsObject = GameObject.Find("Player Quests");
 
-        questsObject = GameObject.Find("Quests");
+        activeQuestsParent = GameObject.Find("Active Quests Parent");
+        completedQuestsParent = GameObject.Find("Completed Quests Parent");
 
-        activeQuestName = GameObject.Find("Active Quest Name Text").GetComponent<TextMeshProUGUI>();
-        activeQuestObjective = GameObject.Find("Active Quest Objective Text").GetComponent<TextMeshProUGUI>();
-
-        if (!questsOpen && questsObject.activeSelf)
-        {
-            questsObject.SetActive(questsOpen);
-        }
+        selectedQuestName = GameObject.Find("Quest Name Text").GetComponent<TextMeshProUGUI>();
+        selectedQuestDescription = GameObject.Find("Quest Desc Text").GetComponent<TextMeshProUGUI>();
     }
 
     public void findInventoryUI()
     {
-        #region Finding Inventory Objects
         //Finds Inventory Object
         inventoryObject = GameObject.Find("Player Inventory");
 
         //Finds Inventory Slots
         weaponSlots = GameObject.Find("Weapon Slots");
         defenseSlots = GameObject.Find("Defense Slots");
+        creaturesSlots = GameObject.Find("Creatures Slots");
         keySlots = GameObject.Find("Key Slots");
 
         //Finds Inventory Slots Parent
         weaponParent = GameObject.Find("Weapon Slots Parent").transform;
         defenseParent = GameObject.Find("Defense Slots Parent").transform;
+        creaturesParent = GameObject.Find("Creatures Slots Parent").transform;
         keyParent = GameObject.Find("Key Slots Parent").transform;
 
         //Finds Inventory Equip Slots
@@ -143,185 +200,106 @@ public class GUIController : MonoBehaviour {
         //Finds Slot Selector Buttons
         weaponButton = GameObject.Find("Weapons Button").GetComponent<Button>();
         defenseButton = GameObject.Find("Defense Button").GetComponent<Button>();
+        creaturesButton = GameObject.Find("Creatures Button").GetComponent<Button>();
         keyButton = GameObject.Find("Key Button").GetComponent<Button>();
 
-        //Assigns Listeners to Buttons
-        weaponButton.onClick.AddListener(delegate { openWeaponSlots(); });
-        defenseButton.onClick.AddListener(delegate { openDefenseSlots(); });
-        keyButton.onClick.AddListener(delegate { openKeySlots(); });
+        playerStatsTitle = GameObject.Find("Player Stats Title Text").GetComponent<TextMeshProUGUI>();
+        playerAttackStat = GameObject.Find("Player Stat Attack Text").GetComponent<TextMeshProUGUI>();
+        playerDefenceStat = GameObject.Find("Player Stat Defence Text").GetComponent<TextMeshProUGUI>();
+        playerSpecialStat = GameObject.Find("Player Stat Special Text").GetComponent<TextMeshProUGUI>();
 
-        setEquipButtonListeners();
+        playerNameText = GameObject.Find("Player Name Text").GetComponent<TextMeshProUGUI>();
+
+        //Assigns Listeners to Buttons
+        setTabMenuButtonListeners();
 
         defaultDisable();
-        #endregion
+    }
 
+    public void findPauseUI()
+    {
+        pauseUI = GameObject.Find("Pause Menu");
+
+        pauseSaveButton = GameObject.Find("Save Button").GetComponent<Button>();
+        pauseLoadButton = GameObject.Find("Load Button").GetComponent<Button>();
+        pauseSettingsButton = GameObject.Find("Settings Button").GetComponent<Button>();
+        pauseMainMenuButton = GameObject.Find("Main Menu Button").GetComponent<Button>();
+
+        setPauseButtonListeners();
+
+        GUIControls.instance.togglePauseMenu(false);
+    }
+
+    public void findMapUI()
+    {
         mapObject = GameObject.Find("Map");
-
-        minimapObject = GameObject.Find("Minimap");
 
         mapCamera = GameObject.Find("Map Camera").GetComponent<Camera>();
 
-        minimapCamera = GameObject.Find("Minimap Camera").GetComponent<Camera>();
+        activeQuestName = GameObject.Find("Active Quest Name Text").GetComponent<TextMeshProUGUI>();
+        activeQuestObjective = GameObject.Find("Active Quest Objective Text").GetComponent<TextMeshProUGUI>();
 
-        toggleMap(mapOpen);
-    }
-    #endregion
-
-    #region Toggle methods for menu UI
-    public void toggleMenuUI(bool _open)
-    {
-        menuUI.SetActive(_open);
-        loadUI.SetActive(!_open);
-    }
-
-    public void toggleLoadUI(bool _open)
-    {
-        loadUI.SetActive(_open);
-        menuUI.SetActive(!_open);
-    }
-
-    public void toggleNameUI(bool _open)
-    {
-        nameUI.SetActive(_open);
-    }
-
-    #endregion
-
-    #region Toggle methods for game UI
-    public void toggleQuests(bool _open)
-    {
-        if (_open)
-        {
-            questsOpen = true;
-            questsObject.SetActive(true);
-            return;
-        }else if (!_open)
-        {
-            questsOpen = false;
-            questsObject.SetActive(false);
-            return;
-        }
-    }
-
-    public void toggleMap(bool _open)
-    {
-        if (_open)
-        {
-            mapObject.SetActive(true);
-            mapCamera.gameObject.SetActive(true);
-            mapOpen = true;
-            return;
-        }else if (!_open)
-        {
-            mapObject.SetActive(false);
-            mapCamera.gameObject.SetActive(false);
-            mapOpen = false;
-            return;
-        }
-    }
-
-    public void toggleMinimap(bool _open)
-    {
-        if (_open)
-        {
-            minimapObject.SetActive(true);
-            minimapOpen = true;
-            return;
-        }
-        else if (!_open)
-        {
-            minimapObject.SetActive(false);
-            minimapOpen = false;
-            return;
-        }
-    }
-
-    //Toggles inventory open and closed
-    public void toggleInventory(bool open)
-    {
-        if (open)
-        {
-            inventoryObject.SetActive(true);
-        }else if (!open)
-        {
-            inventoryObject.SetActive(false);
-        }
-    }
-
-    //Sets the default view of the inventory
-    private void defaultDisable()
-    {
-        openWeaponSlots();
-
-        toggleInventory(false);
+        GUIControls.instance.toggleMap(mapOpen);
     }
     #endregion
 
     #region Assign Button Listeners
+
+    #region Menu & Load Button Listeners
     public void setMenuButtonListeners()
     {
-        playButton.onClick.AddListener(delegate { toggleLoadUI(true); });
+        newGameButton.onClick.AddListener(delegate { GUIControls.instance.toggleLoadUI(true); });
+        continueButton.onClick.AddListener(delegate { GameController.instance.continueGame(); });
         exitButton.onClick.AddListener(delegate { GameController.instance.exitGame(); });
     }
 
     public void setLoadButtonListeners()
     {
-        saveOneButton.onClick.AddListener(delegate { toggleNameUI(true); });
-        saveTwoButton.onClick.AddListener(delegate { toggleNameUI(true); });
-        saveThreeButton.onClick.AddListener(delegate { toggleNameUI(true); });
+        backButton.onClick.AddListener(delegate { GUIControls.instance.toggleMenuUI(true); });
 
-        backButton.onClick.AddListener(delegate { toggleMenuUI(true); });
+        createButton.onClick.AddListener(delegate { GameController.instance.newGame(); });
 
-        createButton.onClick.AddListener(delegate { GameController.instance.startGame(); });
-    }
-
-    public void setEquipButtonListeners()
-    {
-        headEquip.onClick.AddListener( delegate { InventoryController.instance.unequipItem(ItemType.Head); });
-        chestEquip.onClick.AddListener(delegate { InventoryController.instance.unequipItem(ItemType.Chest); });
-        legsEquip.onClick.AddListener(delegate { InventoryController.instance.unequipItem(ItemType.Legs); });
-
-        weaponEquip.onClick.AddListener(delegate { InventoryController.instance.unequipItem(ItemType.Weapon); });
+        yesButton.onClick.AddListener(delegate { StartCoroutine(GameController.instance.NewGame()); });
+        noButton.onClick.AddListener(delegate { GUIControls.instance.toggleMenuUI(true); });
     }
     #endregion
 
-    #region Slot Controls
-
-    public void openWeaponSlots()
+    #region Game Button Listeners
+    public void setHeaderButtonListeners()
     {
-        weaponSlots.SetActive(true);
-        closeDefenseSlots();
-        closeKeySlots();
+        invButton.onClick.AddListener(delegate { GUIControls.instance.toggleInventory(true); });
+        questsButton.onClick.AddListener(delegate { GUIControls.instance.toggleQuests(true); });
     }
 
-    public void closeWeaponSlots()
+    public void setPauseButtonListeners()
     {
-        weaponSlots.SetActive(false);
+        pauseSaveButton.onClick.AddListener(delegate { SaveManager.instance.savePlayerData(); });
+        pauseLoadButton.onClick.AddListener(delegate { Debug.Log("Load Game"); });
+        pauseSettingsButton.onClick.AddListener(delegate { Debug.Log("Settings Menu"); });
+        pauseMainMenuButton.onClick.AddListener(delegate { GameController.instance.saveAndExit(); });
     }
 
-    public void openDefenseSlots()
+    public void setTabMenuButtonListeners()
     {
-        defenseSlots.SetActive(true);
-        closeWeaponSlots();
-        closeKeySlots();
-    }
+        headEquip.onClick.AddListener(delegate { InventoryControls.instance.unequipItem(ItemType.Head); });
+        chestEquip.onClick.AddListener(delegate { InventoryControls.instance.unequipItem(ItemType.Chest); });
+        legsEquip.onClick.AddListener(delegate { InventoryControls.instance.unequipItem(ItemType.Legs); });
 
-    public void closeDefenseSlots()
-    {
-        defenseSlots.SetActive(false);
-    }
+        weaponEquip.onClick.AddListener(delegate { InventoryControls.instance.unequipItem(ItemType.Weapon); });
 
-    public void openKeySlots()
-    {
-        keySlots.SetActive(true);
-        closeDefenseSlots();
-        closeWeaponSlots();
+        weaponButton.onClick.AddListener(delegate { GUIControls.instance.openWeaponSlots(); });
+        defenseButton.onClick.AddListener(delegate { GUIControls.instance.openDefenseSlots(); });
+        creaturesButton.onClick.AddListener(delegate { GUIControls.instance.openCreaturesSlots(); });
+        keyButton.onClick.AddListener(delegate { GUIControls.instance.openKeySlots(); });
     }
-
-    public void closeKeySlots()
-    {
-        keySlots.SetActive(false);
-    }
+    #endregion
 
     #endregion
+
+    private void defaultDisable()
+    {
+        GUIControls.instance.toggleInventory(true);
+
+        GUIControls.instance.toggleTabMenu(false);
+    }
 }

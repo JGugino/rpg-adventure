@@ -11,13 +11,23 @@ public class PlayerManager : MonoBehaviour {
 
     public GameObject playerSpawn;
 
+    [HideInInspector]
+    public PlayerController playerController;
+
     private void Awake()
     {
         instance = this;
+    }
 
+    public void spawnPlayer()
+    {
         if (playerObject == null)
         {
             playerObject = Instantiate(playerPrefab, playerSpawn.transform.position, Quaternion.identity);
+
+            playerController = playerObject.GetComponent<PlayerController>();
+
+            CameraFollow.instance.target = playerObject.transform;
         }
     }
 }

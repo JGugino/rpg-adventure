@@ -109,7 +109,7 @@ public class QuestController : MonoBehaviour {
     {
         if (!GameObject.Find(_quest.questName))
         {
-            GameObject createdPrefab = Instantiate(GUIController.instance.questPrefab, GUIController.instance.questParent.transform);
+            GameObject createdPrefab = Instantiate(GUIController.instance.questPrefab, GUIController.instance.activeQuestsParent.transform);
 
             createdPrefab.name = _quest.questName;
 

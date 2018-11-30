@@ -41,7 +41,9 @@ GameObject:
   - component: {fileID: 114505820998437490}
   - component: {fileID: 114343384478751708}
   - component: {fileID: 114607531217860206}
+  - component: {fileID: 114635610263387526}
   - component: {fileID: 114909497519008614}
+  - component: {fileID: 114038426373359542}
   m_Layer: 0
   m_Name: _GameManager
   m_TagString: Untagged
@@ -76,6 +78,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114038426373359542
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1926467136903698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90b99b2a732f91f45ac4fe9025fb1797, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114318530661212700
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -87,6 +100,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f4ec40cc67c60c4a945b8feb6498836, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerData:
+    playerName: 
+    playerHealth: 0
+    inventoryItems: []
+    equippedHead: {fileID: 0}
+    equippedChest: {fileID: 0}
+    equippedLegs: {fileID: 0}
+    equippedWeapon: {fileID: 0}
+    equippedCreature: {fileID: 0}
 --- !u!114 &114343384478751708
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -127,6 +149,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItems: []
+  equippedHead: {fileID: 0}
+  equippedChest: {fileID: 0}
+  equippedLegs: {fileID: 0}
+  equippedWeapon: {fileID: 0}
   equippedCreature: {fileID: 0}
 --- !u!114 &114607531217860206
 MonoBehaviour:
@@ -139,22 +165,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfbe3f0555fdeab44894939b171cef89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minimapOpen: 1
   mapOpen: 0
-  questsOpen: 0
   menuUI: {fileID: 0}
   loadUI: {fileID: 0}
-  nameUI: {fileID: 0}
+  overwriteUI: {fileID: 0}
   nameInput: {fileID: 0}
-  playButton: {fileID: 0}
+  newGameButton: {fileID: 0}
+  continueButton: {fileID: 0}
   settingsButton: {fileID: 0}
   exitButton: {fileID: 0}
-  saveOneButton: {fileID: 0}
-  saveTwoButton: {fileID: 0}
-  saveThreeButton: {fileID: 0}
   backButton: {fileID: 0}
   createButton: {fileID: 0}
+  yesButton: {fileID: 0}
+  noButton: {fileID: 0}
   versionText: {fileID: 0}
+  tabMenuObject: {fileID: 0}
+  invMenuTitle: {fileID: 0}
+  questMenuTitle: {fileID: 0}
+  playerHealthText: {fileID: 0}
+  playerMoneyText: {fileID: 0}
+  invButton: {fileID: 0}
+  questsButton: {fileID: 0}
   weaponSlotPrefab: {fileID: 1070202907688780, guid: 0abee6fac8481aa45886a1a9c0a7fc15,
     type: 2}
   defenseSlotPrefab: {fileID: 1524684888746190, guid: 5b4787438d2c68e4c84d5931a8588c54,
@@ -163,6 +194,7 @@ MonoBehaviour:
     type: 2}
   weaponSlots: {fileID: 0}
   defenseSlots: {fileID: 0}
+  creaturesSlots: {fileID: 0}
   keySlots: {fileID: 0}
   inventoryObject: {fileID: 0}
   headSlot: {fileID: 0}
@@ -171,24 +203,51 @@ MonoBehaviour:
   weaponSlot: {fileID: 0}
   weaponParent: {fileID: 0}
   defenseParent: {fileID: 0}
+  creaturesParent: {fileID: 0}
   keyParent: {fileID: 0}
   weaponButton: {fileID: 0}
   defenseButton: {fileID: 0}
+  creaturesButton: {fileID: 0}
   keyButton: {fileID: 0}
   weaponEquip: {fileID: 0}
   headEquip: {fileID: 0}
   chestEquip: {fileID: 0}
   legsEquip: {fileID: 0}
-  mapObject: {fileID: 0}
-  minimapObject: {fileID: 0}
-  mapCamera: {fileID: 0}
-  minimapCamera: {fileID: 0}
+  playerStatsTitle: {fileID: 0}
+  playerAttackStat: {fileID: 0}
+  playerDefenceStat: {fileID: 0}
+  playerSpecialStat: {fileID: 0}
+  playerNameText: {fileID: 0}
+  creaturesAttackStat: {fileID: 0}
+  creaturesDefenceStat: {fileID: 0}
+  creaturesSpecialStat: {fileID: 0}
   questPrefab: {fileID: 1090887314672168, guid: a9d83d7f90740ee459dc1a1d10cbe873,
     type: 2}
-  questParent: {fileID: 0}
   questsObject: {fileID: 0}
+  activeQuestsParent: {fileID: 0}
+  completedQuestsParent: {fileID: 0}
   activeQuestName: {fileID: 0}
   activeQuestObjective: {fileID: 0}
+  selectedQuestName: {fileID: 0}
+  selectedQuestDescription: {fileID: 0}
+  mapObject: {fileID: 0}
+  mapCamera: {fileID: 0}
+  pauseUI: {fileID: 0}
+  pauseSaveButton: {fileID: 0}
+  pauseLoadButton: {fileID: 0}
+  pauseSettingsButton: {fileID: 0}
+  pauseMainMenuButton: {fileID: 0}
+--- !u!114 &114635610263387526
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1926467136903698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba2f4587dd168144091ca97a36653687, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114635838617642488
 MonoBehaviour:
   m_ObjectHideFlags: 1
